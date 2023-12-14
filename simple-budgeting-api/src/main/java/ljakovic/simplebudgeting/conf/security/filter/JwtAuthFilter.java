@@ -5,7 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ljakovic.simplebudgeting.conf.security.service.LoadUserUserDetailsService;
-import ljakovic.simplebudgeting.util.JwtUtil;
+import ljakovic.simplebudgeting.conf.security.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

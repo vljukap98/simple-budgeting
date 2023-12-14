@@ -5,7 +5,7 @@ import ljakovic.simplebudgeting.auth.dto.LoginReqDto;
 import ljakovic.simplebudgeting.auth.dto.RegisterReqDto;
 import ljakovic.simplebudgeting.appuser.model.AppUser;
 import ljakovic.simplebudgeting.appuser.repo.AppUserRepo;
-import ljakovic.simplebudgeting.util.JwtUtil;
+import ljakovic.simplebudgeting.conf.security.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
