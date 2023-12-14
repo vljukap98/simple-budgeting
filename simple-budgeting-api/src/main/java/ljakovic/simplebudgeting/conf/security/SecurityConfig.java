@@ -31,9 +31,6 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
 
-    //@Autowired
-    //private LogoutHandler logoutHandler;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -47,12 +44,6 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-                //.logout(l -> l.logoutUrl("/v1/auth/logout")
-                //        .addLogoutHandler(logoutHandler)
-                //        .logoutSuccessHandler((req, res, auth) -> SecurityContextHolder.clearContext())
-                //);
-        http.cors();
-
 
         return http.build();
     }
@@ -61,6 +52,4 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
-
 }
