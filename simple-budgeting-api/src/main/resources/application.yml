@@ -1,0 +1,20 @@
+server:
+  servlet:
+    context-path: /simple-budgeting
+
+############################## DB conf ##############################
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/simple-budgeting-demo
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  secret: Y0W7GgFjc8DXIYudhJ0iP2zFvMJcvrD6jorWBorUnWjorWBorUnWjorWBorUnW
+  expiration: 86400000
