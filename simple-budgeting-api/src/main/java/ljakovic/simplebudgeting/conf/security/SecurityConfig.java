@@ -1,6 +1,6 @@
 package ljakovic.simplebudgeting.conf.security;
 
-import ljakovic.simplebudgeting.conf.security.filter.JwtAuthFilter;
+import ljakovic.simplebudgeting.conf.security.filter.RequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ public class SecurityConfig {
     private AuthenticationProvider authProvider;
 
     @Autowired
-    private JwtAuthFilter jwtAuthFilter;
+    private RequestFilter requestFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,7 +43,7 @@ public class SecurityConfig {
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

@@ -33,8 +33,11 @@ public class ExpenseService {
     @Autowired
     private ExpenseMapper mapper;
 
-    public List<ExpenseDto> getExpenses() {
-        return expenseRepo.findAll().stream()
+    //TODO: write this method for Pageable interface
+    public List<ExpenseDto> getByBudgetAccountId(UUID budgetAccountId) {
+        final List<Expense> expenses = expenseRepo.findByBudgetAccountId(budgetAccountId);
+
+        return expenses.stream()
                 .map(mapper::mapTo)
                 .collect(Collectors.toList());
     }
@@ -61,6 +64,12 @@ public class ExpenseService {
 
         expenseRepo.save(expense);
 
+        final Double accountResources = account.getTotalResources();
+
+        account.setTotalResources(accountResources - expense.getAmount());
+
+        accountRepo.save(account);
+
         return mapper.mapTo(expense);
     }
 
@@ -86,4 +95,6 @@ public class ExpenseService {
     public void delete(UUID id) {
         expenseRepo.deleteById(id);
     }
+
+
 }

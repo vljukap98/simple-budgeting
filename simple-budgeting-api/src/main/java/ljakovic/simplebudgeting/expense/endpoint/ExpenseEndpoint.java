@@ -17,14 +17,14 @@ public class ExpenseEndpoint {
     @Autowired
     private ExpenseService service;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<ExpenseDto>> getExpenses() {
-        return ResponseEntity.ok(service.getExpenses());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ExpenseDto> getExpenseById(@PathVariable String id) {
         return ResponseEntity.ok(service.getById(UUID.fromString(id)));
+    }
+
+    @GetMapping("/budget-account/{id}")
+    public ResponseEntity<List<ExpenseDto>> getExpensesForBudgetAccount(@PathVariable String id) {
+        return ResponseEntity.ok(service.getByBudgetAccountId(UUID.fromString(id)));
     }
 
     @PostMapping("/add")

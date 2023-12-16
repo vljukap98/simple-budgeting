@@ -13,6 +13,6 @@ public class UserUtil {
                 .getAuthentication()
                 .getPrincipal();
 
-        return user.getUsername();
+        return user.getId().toString();
     }
 }
