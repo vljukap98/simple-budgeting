@@ -21,7 +21,7 @@ public class BudgetAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private Double totalResources;
+    private Double totalResources = 500D; //default resource amount
     private Date dateCreated;
     private Date dateModified;
 

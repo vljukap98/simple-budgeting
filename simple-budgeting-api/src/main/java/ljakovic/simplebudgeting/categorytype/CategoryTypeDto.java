@@ -1,7 +1,7 @@
-package ljakovic.simplebudgeting.category.dto;
+package ljakovic.simplebudgeting.categorytype;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import ljakovic.simplebudgeting.categorytype.CategoryTypeDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,13 +9,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CategoryDto {
-
+public class CategoryTypeDto {
     private String id;
     private String name;
-    private String description;
-    private CategoryTypeDto categoryType;
 }

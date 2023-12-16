@@ -5,6 +5,8 @@ import ljakovic.simplebudgeting.category.dto.CategoryDto;
 import ljakovic.simplebudgeting.category.mapper.CategoryMapper;
 import ljakovic.simplebudgeting.category.model.Category;
 import ljakovic.simplebudgeting.category.repo.CategoryRepo;
+import ljakovic.simplebudgeting.categorytype.model.CategoryType;
+import ljakovic.simplebudgeting.categorytype.repo.CategoryTypeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,48 +19,54 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     @Autowired
-    private CategoryRepo repo;
+    private CategoryRepo categoryRepo;
+
+    @Autowired
+    private CategoryTypeRepo categoryTypeRepo;
 
     @Autowired
     CategoryMapper mapper;
 
     public List<CategoryDto> getCategories() {
-        return repo.findAll().stream()
+        return categoryRepo.findAll().stream()
                 .map(mapper::mapTo)
                 .collect(Collectors.toList());
     }
 
     public CategoryDto getById(UUID id) {
-        final Category category = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Category not found"));
+        final Category category = categoryRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Category not found"));
         return mapper.mapTo(category);
     }
 
     public CategoryDto create(CategoryDto dto) {
+        final CategoryType categoryType = categoryTypeRepo.findById(UUID.fromString(dto.getCategoryType().getId()))
+                .orElseThrow(() -> new EntityNotFoundException("Category type not found"));
         final Category category = Category.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .dateCreated(new Date())
                 .dateModified(new Date())
+                .categoryType(categoryType)
                 .build();
 
-        repo.save(category);
+        categoryRepo.save(category);
 
         return mapper.mapTo(category);
     }
 
     public CategoryDto update(CategoryDto dto) {
-        final Category category = repo.findById(UUID.fromString(dto.getId())).orElseThrow(() -> new EntityNotFoundException("Category not found"));
+        final Category category = categoryRepo.findById(UUID.fromString(dto.getId())).orElseThrow(() -> new EntityNotFoundException("Category not found"));
 
         category.setName(dto.getName());
         category.setDescription(dto.getDescription());
         category.setDateModified(new Date());
 
-        repo.save(category);
+        categoryRepo.save(category);
 
         return mapper.mapTo(category);
     }
 
     public void delete(UUID id) {
-        repo.deleteById(id);
+        categoryRepo.deleteById(id);
     }
 }

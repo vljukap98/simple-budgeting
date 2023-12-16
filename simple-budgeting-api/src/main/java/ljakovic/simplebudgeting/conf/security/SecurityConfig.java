@@ -22,7 +22,7 @@ public class SecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
             "/v1/auth/**",
-            "/v1/monitor/**",
+            "/v1/monitor/**"
     };
 
     @Autowired
