@@ -25,10 +25,4 @@ public class AppUserEndpoint {
     public ResponseEntity<AppUserDto> getAppUserById(@PathVariable String id) {
         return ResponseEntity.ok(service.getById(UUID.fromString(id)));
     }
-
-    @GetMapping("/budget-accounts")
-    public ResponseEntity<List<BudgetAccountDto>> getAppUserAccounts() {
-
-        return null;
-    }
 }

@@ -1,9 +1,6 @@
 package ljakovic.simplebudgeting.appuser.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,6 +24,7 @@ public class AppUser implements UserDetails {
     private UUID id;
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String username;
     private String password;
     private Date dateCreated;
