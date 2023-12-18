@@ -5,12 +5,13 @@ import ljakovic.simplebudgeting.budgetaccount.model.BudgetAccount;
 import ljakovic.simplebudgeting.budgetaccount.repo.BudgetAccountRepo;
 import ljakovic.simplebudgeting.category.model.Category;
 import ljakovic.simplebudgeting.category.repo.CategoryRepo;
-import ljakovic.simplebudgeting.category.service.CategoryService;
 import ljakovic.simplebudgeting.expense.dto.ExpenseDto;
 import ljakovic.simplebudgeting.expense.mapper.ExpenseMapper;
 import ljakovic.simplebudgeting.expense.model.Expense;
 import ljakovic.simplebudgeting.expense.repo.ExpenseRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -33,7 +34,17 @@ public class ExpenseService {
     @Autowired
     private ExpenseMapper mapper;
 
-    //TODO: write this method for Pageable interface
+    public List<ExpenseDto> getByBudgetAccountIdPageable(Pageable pageable, UUID budgetAccountId) {
+        final BudgetAccount account = accountRepo.findById(budgetAccountId)
+                .orElseThrow(() -> new EntityNotFoundException("Budget account not found"));
+
+        final Page<Expense> expenses = expenseRepo.findByAccount(account, pageable);
+
+        return expenses.getContent().stream()
+                .map(mapper::mapTo)
+                .collect(Collectors.toList());
+    }
+
     public List<ExpenseDto> getByBudgetAccountId(UUID budgetAccountId) {
         final List<Expense> expenses = expenseRepo.findByBudgetAccountId(budgetAccountId);
 

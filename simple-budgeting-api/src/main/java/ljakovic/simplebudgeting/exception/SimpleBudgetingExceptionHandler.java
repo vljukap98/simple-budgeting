@@ -1,6 +1,7 @@
 package ljakovic.simplebudgeting.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,6 +21,13 @@ public class SimpleBudgetingExceptionHandler {
     public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler({PropertyReferenceException.class})
+    public ResponseEntity<Object> handlePropertyReferenceException(PropertyReferenceException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());
     }
 }
