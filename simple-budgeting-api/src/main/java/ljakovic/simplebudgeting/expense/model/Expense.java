@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import ljakovic.simplebudgeting.budgetaccount.model.BudgetAccount;
 import ljakovic.simplebudgeting.category.model.Category;
+import ljakovic.simplebudgeting.util.UUIDConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class Expense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Convert(converter = UUIDConverter.class)
     private UUID id;
     private Double amount;
     private Date dateCreated;
