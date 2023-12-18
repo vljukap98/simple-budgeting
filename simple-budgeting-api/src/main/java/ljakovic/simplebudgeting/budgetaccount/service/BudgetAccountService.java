@@ -31,7 +31,7 @@ public class BudgetAccountService {
     }
 
     public List<BudgetAccountDto> getUserAccounts() {
-        final UUID loggedInUserId = UUID.fromString(userUtil.getLoggedInUserUsername());
+        final UUID loggedInUserId = UUID.fromString(userUtil.getLoggedInUserId());
 
         return repo.findByUserId(loggedInUserId).stream()
                 .map(mapper::mapTo)

@@ -95,7 +95,7 @@ public class ExpenseService {
         final BudgetAccount account = accountRepo.findById(UUID.fromString(dto.getAccount().getId()))
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));
 
-        Expense expense = Expense.builder()
+        final Expense expense = Expense.builder()
                 .amount(Double.parseDouble(dto.getAmount()))
                 .dateCreated(new Date())
                 .account(account)
@@ -133,7 +133,13 @@ public class ExpenseService {
     }
 
     public void delete(UUID id) {
+        final Expense expense = expenseRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Expense not found"));
+
+        final BudgetAccount account = expense.getAccount();
+        account.setTotalResources(account.getTotalResources() + expense.getAmount());
         expenseRepo.deleteById(id);
+        accountRepo.save(account);
     }
 
 

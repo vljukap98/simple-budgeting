@@ -1,13 +1,11 @@
 package ljakovic.simplebudgeting.expense.repo;
 
-import ljakovic.simplebudgeting.expense.model.Expense;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
-public interface ExpenseFilterRepository {
+public interface ExpenseSearchRepo {
 
     List<String> searchExpensesByAccount(
             String budgedAccountId,

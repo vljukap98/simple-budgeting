@@ -2,7 +2,7 @@ package ljakovic.simplebudgeting.expense.repo.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import ljakovic.simplebudgeting.expense.repo.ExpenseFilterRepository;
+import ljakovic.simplebudgeting.expense.repo.ExpenseSearchRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public class ExpenseFilterRepositoryImpl implements ExpenseFilterRepository {
+public class ExpenseSearchRepoImpl implements ExpenseSearchRepo {
 
     @Autowired
     private EntityManager em;

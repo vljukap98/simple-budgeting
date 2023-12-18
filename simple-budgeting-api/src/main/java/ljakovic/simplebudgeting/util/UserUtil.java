@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserUtil {
 
-    public String getLoggedInUserUsername() {
+    public String getLoggedInUserId() {
         AppUser user = (AppUser) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
