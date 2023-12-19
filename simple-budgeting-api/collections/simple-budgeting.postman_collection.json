@@ -1,0 +1,417 @@
+{
+	"info": {
+		"_postman_id": "8bb9a2df-813a-4b61-b48d-848fbfb64dac",
+		"name": "simple-budgeting",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "14590658"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"ljakovic98\",\r\n    \"password\":\"Lozinka123!\"\r\n}"
+						},
+						"url": "localhost:8080/simple-budgeting/v1/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\":\"luka\",\r\n    \"lastName\":\"jakovic\",\r\n    \"username\":\"ljakovic98\",\r\n    \"password\":\"Lozinka123!\"\r\n}"
+						},
+						"url": "localhost:8080/simple-budgeting/v1/auth/register"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AppUser",
+			"item": [
+				{
+					"name": "Get user by id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYyIsImlhdCI6MTcwMjU1OTk5NiwiZXhwIjoxNzAyNjQ2Mzk2fQ.6s_1CNDLPF2NCZjMmtXS1bHjhLVDPf1eSUNXme008xs",
+								"type": "text"
+							}
+						],
+						"url": "localhost:8080/simple-budgeting/v1/app-user/270922bb-50ba-4849-8bf4-0cb81b95866e"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BudgetAccount",
+			"item": [
+				{
+					"name": "Get by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYzk4IiwiaWF0IjoxNzAzMDIxMjQ4LCJleHAiOjE3MDMxMDc2NDh9.r-Jvx-ag5dmgjCo8zZedLs26BFYIk0sH16K4wVHBc88",
+								"type": "text"
+							}
+						],
+						"url": "localhost:8080/simple-budgeting/v1/budget-account/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Get logged in user accounts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYzk4IiwiaWF0IjoxNzAzMDExNzkyLCJleHAiOjE3MDMwOTgxOTJ9.6BQU6Hx3aQ7xibvNNGmTrAEV4usB6S2oiJ32JB8fUbU",
+								"type": "text"
+							}
+						],
+						"url": "localhost:8080/simple-budgeting/v1/budget-account/user-accounts"
+					},
+					"response": []
+				},
+				{
+					"name": "Create budget account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYzk4IiwiaWF0IjoxNzAzMDE2MzI3LCJleHAiOjE3MDMxMDI3Mjd9.1byJw4q7S5T367xHxEuZAJMgJXS5ndA9QvaPgxr6U10",
+								"type": "text"
+							}
+						],
+						"url": "localhost:8080/simple-budgeting/v1/budget-account/create"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Expense",
+			"item": [
+				{
+					"name": "New expense",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYzk4IiwiaWF0IjoxNzAzMDExNzkyLCJleHAiOjE3MDMwOTgxOTJ9.6BQU6Hx3aQ7xibvNNGmTrAEV4usB6S2oiJ32JB8fUbU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\": 19.99,\r\n    \"category\": {\r\n        \"id\":\"1\"\r\n    },\r\n    \"account\": {\r\n        \"id\":\"1\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/simple-budgeting/v1/expense/add"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all account expenses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYzk4IiwiaWF0IjoxNzAzMDIxMjQ4LCJleHAiOjE3MDMxMDc2NDh9.r-Jvx-ag5dmgjCo8zZedLs26BFYIk0sH16K4wVHBc88",
+								"type": "text"
+							}
+						],
+						"url": "localhost:8080/simple-budgeting/v1/expense/budget-account/1"
+					},
+					"response": []
+				},
+				{
+					"name": "|Pageable| Get all account expenses",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYzk4IiwiaWF0IjoxNzAzMDIxMjQ4LCJleHAiOjE3MDMxMDc2NDh9.r-Jvx-ag5dmgjCo8zZedLs26BFYIk0sH16K4wVHBc88",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sortProperty\":\"category.dateCreated\",\r\n    \"sortType\":\"ASC\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/simple-budgeting/v1/expense/budget-account/1?page=1&size=10",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"simple-budgeting",
+								"v1",
+								"expense",
+								"budget-account",
+								"1"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search expenses by account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYzk4IiwiaWF0IjoxNzAzMDExNzkyLCJleHAiOjE3MDMwOTgxOTJ9.6BQU6Hx3aQ7xibvNNGmTrAEV4usB6S2oiJ32JB8fUbU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amountMin\": 20,\r\n    \"amountMax\": 50,\r\n    \"categoryTypes\": [\r\n        \"Necessity\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/simple-budgeting/v1/expense/search/budget-account/1?page=1&size=10",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"simple-budgeting",
+								"v1",
+								"expense",
+								"search",
+								"budget-account",
+								"1"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Category types",
+					"item": []
+				},
+				{
+					"name": "Get categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYzk4IiwiaWF0IjoxNzAzMDIxMjQ4LCJleHAiOjE3MDMxMDc2NDh9.r-Jvx-ag5dmgjCo8zZedLs26BFYIk0sH16K4wVHBc88",
+								"type": "text"
+							}
+						],
+						"url": "localhost:8080/simple-budgeting/v1/category/all"
+					},
+					"response": []
+				},
+				{
+					"name": "Create category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYzk4IiwiaWF0IjoxNzAzMDIxMjQ4LCJleHAiOjE3MDMxMDc2NDh9.r-Jvx-ag5dmgjCo8zZedLs26BFYIk0sH16K4wVHBc88",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"TV bill\",\r\n    \"description\":\"New TV\",\r\n    \"categoryType\":{\r\n        \"id\":\"2\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/simple-budgeting/v1/category/add"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Data aggregation",
+			"item": [
+				{
+					"name": "Aggregate earnings monthly",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYzk4IiwiaWF0IjoxNzAzMDExNzkyLCJleHAiOjE3MDMwOTgxOTJ9.6BQU6Hx3aQ7xibvNNGmTrAEV4usB6S2oiJ32JB8fUbU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"aggregationType\": \"Monthly\",\r\n    \"aggregationTime\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/simple-budgeting/v1/aggregation/money-earned/budget-account/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Aggregate spent monthly",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYzk4IiwiaWF0IjoxNzAzMDExNzkyLCJleHAiOjE3MDMwOTgxOTJ9.6BQU6Hx3aQ7xibvNNGmTrAEV4usB6S2oiJ32JB8fUbU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"aggregationType\": \"Monthly\",\r\n    \"aggregationTime\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/simple-budgeting/v1/aggregation/money-spent/budget-account/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Income",
+			"item": [
+				{
+					"name": "Add income",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsamFrb3ZpYzk4IiwiaWF0IjoxNzAzMDExNzkyLCJleHAiOjE3MDMwOTgxOTJ9.6BQU6Hx3aQ7xibvNNGmTrAEV4usB6S2oiJ32JB8fUbU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\": 50.99,\r\n    \"account\": {\r\n        \"id\": 1\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/simple-budgeting/v1/income/create"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/simple-budgeting/swagger-ui/index.html#/"
+			},
+			"response": []
+		}
+	]
+}
