@@ -5,7 +5,7 @@ server:
 ############################## DB conf ##############################
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/simple-budgeting
+    url: jdbc:postgresql://localhost:5432/simple-budgeting-demo1
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: postgres
@@ -16,17 +16,12 @@ spring:
       ddl-auto: none
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: UTC
-
-logging:
-  level:
-    org.hibernate.SQL: debug
 
 jwt:
   secret: Y0W7GgFjc8DXIYudhJ0iP2zFvMJcvrD6jorWBorUnWjorWBorUnWjorWBorUnW

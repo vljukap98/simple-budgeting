@@ -85,7 +85,7 @@ public class AggregationService {
     private List<AggregationResDto> getIncomesMonthly(Integer id, AggregationDto dto) {
         final LocalDate today = LocalDate.now();
         final LocalDate aggregatePeriod = today.withDayOfMonth(1)
-                .minusMonths(dto.getAggregationTime());
+                .minusMonths(dto.getAggregationTime() - 1);
 
         String todayDate = formatLocalDate(today);
         String aggregatePeriodDate = formatLocalDate(aggregatePeriod);

@@ -12,22 +12,23 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface IncomeRepo extends JpaRepository<Income, UUID>, IncomeSearchRepo {
+public interface IncomeRepo extends JpaRepository<Income, UUID>, IncomeSearchRepo, IncomeAggregatedRepo {
 
     @Query("SELECT i FROM Income i WHERE i.account.id = ?1")
     List<Income> findByAccountId(UUID id);
 
 
-    @Query("SELECT " +
-            "MONTH(i.dateCreated) AS month, " +
-            "YEAR(i.dateCreated) AS year, " +
+    @Query(value = "SELECT " +
+            "EXTRACT(MONTH FROM i.date_created) AS month," +
+            "EXTRACT(YEAR FROM i.date_created) AS year," +
             "SUM(i.amount) AS total_amount " +
-            "FROM Income i " +
-            "WHERE i.dateCreated >= :startDate " +
-            "AND i.dateCreated <= :endDate " +
-            "AND i.account.id = :accountId " +
-            "GROUP BY month, year")
-    List<Tuple> aggregateMonthly(@Param("accountId") Integer accountId,
+            "FROM income i " +
+            "INNER JOIN budget_account ba on ba.id = i.account_id " +
+            "WHERE i.date_created >= :startDate " +
+            "AND i.date_created <= :endDate " +
+            "AND ba.id = :accountId " +
+            "GROUP BY month, year", nativeQuery = true)
+    List<Tuple> aggregate(@Param("accountId") Integer accountId,
                                 @Param("startDate") Date startDate,
                                 @Param("endDate") Date endDate);
 

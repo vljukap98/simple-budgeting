@@ -15,8 +15,8 @@
                 <constraints unique="true"/>
             </column>
             <column name="password" type="varchar(255)"/>
-            <column name="date_created" type="timestamp"/>
-            <column name="date_modified" type="timestamp"/>
+            <column name="date_created" type="datetime"/>
+            <column name="date_modified" type="datetime"/>
         </createTable>
     </changeSet>
 
@@ -27,8 +27,8 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="total_resources" type="double precision" defaultValue="500"/>
-            <column name="date_created" type="timestamp"/>
-            <column name="date_modified" type="timestamp"/>
+            <column name="date_created" type="datetime"/>
+            <column name="date_modified" type="datetime"/>
             <column name="user_id" type="int">
                 <constraints foreignKeyName="fk_budget_account_user" references="app_user(id)"/>
             </column>
@@ -45,8 +45,8 @@
                 <constraints unique="true"/>
             </column>
             <column name="description" type="varchar(255)"/>
-            <column name="date_created" type="timestamp"/>
-            <column name="date_modified" type="timestamp"/>
+            <column name="date_created" type="datetime"/>
+            <column name="date_modified" type="datetime"/>
         </createTable>
     </changeSet>
 
@@ -60,8 +60,8 @@
                 <constraints unique="true"/>
             </column>
             <column name="description" type="varchar(255)"/>
-            <column name="date_created" type="timestamp"/>
-            <column name="date_modified" type="timestamp"/>
+            <column name="date_created" type="datetime"/>
+            <column name="date_modified" type="datetime"/>
             <column name="category_type_id" type="int">
                 <constraints foreignKeyName="fk_category_category_type" references="category_type(id)"/>
             </column>
@@ -75,7 +75,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="amount" type="double precision"/>
-            <column name="date_created" type="timestamp"/>
+            <column name="date_created" type="datetime"/>
             <column name="category_id" type="int">
                 <constraints foreignKeyName="fk_expense_category" references="category(id)"/>
             </column>
@@ -92,7 +92,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="amount" type="double precision"/>
-            <column name="date_created" type="timestamp"/>
+            <column name="date_created" type="datetime"/>
             <column name="account_id" type="int">
                 <constraints foreignKeyName="fk_income_budget_account" references="budget_account(id)"/>
             </column>

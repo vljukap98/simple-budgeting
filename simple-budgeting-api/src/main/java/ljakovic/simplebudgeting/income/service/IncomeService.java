@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Month;
@@ -119,22 +120,18 @@ public class IncomeService {
     public List<AggregationResDto> getIncomesAggregatedMonthly(Integer id, String startDate, String endDate) {
         List<Tuple> incomes = null;
 
-        try {
-            incomes = incomeRepo.aggregateMonthly(id, convert(startDate), convert(endDate));
-        } catch (Exception e) {
-            //
-        }
+        incomes = incomeRepo.aggregateMonthly(id, startDate, endDate);
 
         List<AggregationResDto> resDto = new ArrayList<>();
 
         if (incomes != null && !incomes.isEmpty()) {
             for (Tuple t : incomes) {
-                Integer month = t.get("month", Integer.class);
-                Integer year = t.get("year", Integer.class);
+                BigDecimal month = t.get("month", BigDecimal.class);
+                BigDecimal year = t.get("year", BigDecimal.class);
                 Double expenseAmount = t.get("total_amount", Double.class);
 
                 AggregationResDto dto = AggregationResDto.builder()
-                        .timePeriod(Month.of(month).toString() + " " + year.toString())
+                        .timePeriod(Month.of(month.intValue()).toString() + " " + year.toString())
                         .amount(expenseAmount)
                         .build();
 
