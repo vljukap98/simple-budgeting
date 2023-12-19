@@ -59,7 +59,8 @@ public class AggregationService {
 
     private List<ExpenseDto> getExpensesMonthly(Pageable pageable, UUID id, AggregationDto dto) {
         final LocalDate today = LocalDate.now();
-        final LocalDate aggregatePeriod = today.minusMonths(dto.getAggregationTime());
+        final LocalDate aggregatePeriod = today.withDayOfMonth(1)
+                .minusMonths(dto.getAggregationTime());
 
         String todayDate = formatLocalDate(today);
         String aggregatePeriodDate = formatLocalDate(aggregatePeriod);
@@ -81,7 +82,8 @@ public class AggregationService {
 
     private List<IncomeDto> getIncomesMonthly(Pageable pageable, UUID id, AggregationDto dto) {
         final LocalDate today = LocalDate.now();
-        final LocalDate aggregatePeriod = today.minusMonths(dto.getAggregationTime());
+        final LocalDate aggregatePeriod = today.withDayOfMonth(1)
+                .minusMonths(dto.getAggregationTime());
 
         String todayDate = formatLocalDate(today);
         String aggregatePeriodDate = formatLocalDate(aggregatePeriod);
