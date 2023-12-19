@@ -20,7 +20,7 @@ public class AppUserEndpoint {
     private AppUserService service;
 
     @GetMapping("/{id}")
-    public ResponseEntity<AppUserDto> getAppUserById(@PathVariable String id) {
-        return ResponseEntity.ok(service.getById(UUID.fromString(id)));
+    public ResponseEntity<AppUserDto> getAppUserById(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 }

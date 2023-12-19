@@ -18,7 +18,7 @@ public class ExpenseSearchRepoImpl implements ExpenseSearchRepo {
     private EntityManager em;
 
     @Override
-    public List<String> searchExpensesByAccount(
+    public List<Integer> searchExpensesByAccount(
             String budgedAccountId,
             Double amountMin,
             Double amountMax,
@@ -40,7 +40,7 @@ public class ExpenseSearchRepoImpl implements ExpenseSearchRepo {
         where(where, budgedAccountId, amountMin, amountMax, startDate, endDate, categoryNames, categoryTypes);
         query.append(where);
 
-        Query q = em.createNativeQuery(query.toString(), String.class);
+        Query q = em.createNativeQuery(query.toString(), Integer.class);
         params(q, amountMin, amountMax, startDate, endDate, categoryNames, categoryTypes);
         q.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
         q.setMaxResults(pageable.getPageSize());

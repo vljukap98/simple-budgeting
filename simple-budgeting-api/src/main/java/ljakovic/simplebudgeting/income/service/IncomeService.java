@@ -2,6 +2,7 @@ package ljakovic.simplebudgeting.income.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Tuple;
+import ljakovic.simplebudgeting.aggregation.dto.AggregationResDto;
 import ljakovic.simplebudgeting.budgetaccount.model.BudgetAccount;
 import ljakovic.simplebudgeting.budgetaccount.repo.BudgetAccountRepo;
 import ljakovic.simplebudgeting.expense.dto.ExpenseDto;
@@ -35,7 +36,7 @@ public class IncomeService {
     @Autowired
     private IncomeMapper mapper;
 
-    public List<IncomeDto> searchByBudgetAccountIdPageable(Pageable pageable, UUID budgetAccountId, IncomeSearchDto searchDto) {
+    public List<IncomeDto> searchByBudgetAccountIdPageable(Pageable pageable, Integer budgetAccountId, IncomeSearchDto searchDto) {
         final BudgetAccount account = accountRepo.findById(budgetAccountId)
                 .orElseThrow(() -> new EntityNotFoundException("Budget account not found"));
 
@@ -61,11 +62,11 @@ public class IncomeService {
     }
 
     public IncomeDto createIncome(IncomeDto dto) {
-        final BudgetAccount account = accountRepo.findById(UUID.fromString(dto.getAccount().getId()))
+        final BudgetAccount account = accountRepo.findById(dto.getAccount().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));
 
         final Income income = Income.builder()
-                .amount(Double.parseDouble(dto.getAmount()))
+                .amount(dto.getAmount())
                 .dateCreated(new Date())
                 .account(account)
                 .build();
@@ -87,7 +88,7 @@ public class IncomeService {
         accountRepo.save(account);
     }
 
-    public List<IncomeDto> getIncomesAggregatedYearly(Pageable pageable, UUID id, String startDate, String endDate) {
+    public List<AggregationResDto> getIncomesAggregatedYearly(Integer id, String startDate, String endDate) {
         List<Tuple> incomes = null;
 
         try {
@@ -96,26 +97,26 @@ public class IncomeService {
             //
         }
 
-        List<IncomeDto> incomesDto = new ArrayList<>();
+        List<AggregationResDto> resDto = new ArrayList<>();
 
         if (incomes != null && !incomes.isEmpty()) {
             for (Tuple t : incomes) {
                 Integer year = t.get("year", Integer.class);
                 Double expenseAmount = t.get("total_amount", Double.class);
 
-                IncomeDto dto = IncomeDto.builder()
-                        .dateCreated(year.toString())
-                        .amount(expenseAmount.toString())
+                AggregationResDto dto = AggregationResDto.builder()
+                        .timePeriod(year.toString())
+                        .amount(expenseAmount)
                         .build();
 
-                incomesDto.add(dto);
+                resDto.add(dto);
             }
         }
 
-        return incomesDto;
+        return resDto;
     }
 
-    public List<IncomeDto> getIncomesAggregatedMonthly(Pageable pageable, UUID id, String startDate, String endDate) {
+    public List<AggregationResDto> getIncomesAggregatedMonthly(Integer id, String startDate, String endDate) {
         List<Tuple> incomes = null;
 
         try {
@@ -124,7 +125,7 @@ public class IncomeService {
             //
         }
 
-        List<IncomeDto> incomesDto = new ArrayList<>();
+        List<AggregationResDto> resDto = new ArrayList<>();
 
         if (incomes != null && !incomes.isEmpty()) {
             for (Tuple t : incomes) {
@@ -132,16 +133,16 @@ public class IncomeService {
                 Integer year = t.get("year", Integer.class);
                 Double expenseAmount = t.get("total_amount", Double.class);
 
-                IncomeDto dto = IncomeDto.builder()
-                        .dateCreated(Month.of(month).toString() + " " + year.toString())
-                        .amount(expenseAmount.toString())
+                AggregationResDto dto = AggregationResDto.builder()
+                        .timePeriod(Month.of(month).toString() + " " + year.toString())
+                        .amount(expenseAmount)
                         .build();
 
-                incomesDto.add(dto);
+                resDto.add(dto);
             }
         }
 
-        return incomesDto;
+        return resDto;
     }
 
     private Date convert(String date) throws ParseException {

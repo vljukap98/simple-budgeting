@@ -20,8 +20,8 @@ import java.util.UUID;
 public class Expense {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private Double amount;
     private Date dateCreated;
     @ManyToOne(fetch = FetchType.LAZY)

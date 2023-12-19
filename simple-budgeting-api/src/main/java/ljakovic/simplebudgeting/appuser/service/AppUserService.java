@@ -19,12 +19,12 @@ public class AppUserService {
     @Autowired
     private AppUserMapper mapper;
 
-    public AppUser getAppUserById(UUID id) {
+    public AppUser getAppUserById(Integer id) {
         return repo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
-    public AppUserDto getById(UUID id) {
+    public AppUserDto getById(Integer id) {
         AppUser appUser = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         return mapper.mapTo(appUser);

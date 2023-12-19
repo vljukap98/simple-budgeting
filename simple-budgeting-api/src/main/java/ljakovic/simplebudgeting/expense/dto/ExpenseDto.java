@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,9 +17,9 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ExpenseDto {
 
-    private String id;
-    private String amount;
-    private String dateCreated;
+    private Integer id;
+    private Double amount;
+    private Date dateCreated;
     private CategoryDto category;
     private BudgetAccountDto account;
 }

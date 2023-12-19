@@ -2,6 +2,7 @@ package ljakovic.simplebudgeting.expense.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Tuple;
+import ljakovic.simplebudgeting.aggregation.dto.AggregationResDto;
 import ljakovic.simplebudgeting.budgetaccount.model.BudgetAccount;
 import ljakovic.simplebudgeting.budgetaccount.repo.BudgetAccountRepo;
 import ljakovic.simplebudgeting.category.model.Category;
@@ -41,7 +42,7 @@ public class ExpenseService {
     @Autowired
     private ExpenseMapper mapper;
 
-    public List<ExpenseDto> getByBudgetAccountIdPageable(Pageable pageable, UUID budgetAccountId) {
+    public List<ExpenseDto> getByBudgetAccountIdPageable(Pageable pageable, Integer budgetAccountId) {
         final BudgetAccount account = accountRepo.findById(budgetAccountId)
                 .orElseThrow(() -> new EntityNotFoundException("Budget account not found"));
 
@@ -51,7 +52,7 @@ public class ExpenseService {
                 .map(mapper::mapTo)
                 .collect(Collectors.toList());
     }
-    public List<ExpenseDto> searchByBudgetAccountIdPageable(Pageable pageable, UUID budgedAccountId, ExpenseSearchDto searchDto) {
+    public List<ExpenseDto> searchByBudgetAccountIdPageable(Pageable pageable, Integer budgedAccountId, ExpenseSearchDto searchDto) {
         final BudgetAccount account = accountRepo.findById(budgedAccountId)
                 .orElseThrow(() -> new EntityNotFoundException("Budget account not found"));
 
@@ -64,7 +65,7 @@ public class ExpenseService {
         List<String> categoryTypes = searchDto.getCategoryTypes();
 
 
-        final List<String> expenseIds = expenseRepo.searchExpensesByAccount(
+        final List<Integer> expenseIds = expenseRepo.searchExpensesByAccount(
                 accountId,
                 amountMin,
                 amountMax,
@@ -75,12 +76,12 @@ public class ExpenseService {
                 pageable
         );
 
-        return expenseRepo.findAllById(expenseIds.stream().map(UUID::fromString).collect(Collectors.toList())).stream()
+        return expenseRepo.findAllById(expenseIds).stream()
                 .map(mapper::mapTo)
                 .collect(Collectors.toList());
     }
 
-    public List<ExpenseDto> getByBudgetAccountId(UUID budgetAccountId) {
+    public List<ExpenseDto> getByBudgetAccountId(Integer budgetAccountId) {
         final List<Expense> expenses = expenseRepo.findByBudgetAccountId(budgetAccountId);
 
         return expenses.stream()
@@ -88,21 +89,21 @@ public class ExpenseService {
                 .collect(Collectors.toList());
     }
 
-    public ExpenseDto getById(UUID id) {
+    public ExpenseDto getById(Integer id) {
         final Expense expense = expenseRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Expense not found"));
 
         return mapper.mapTo(expense);
     }
 
     public ExpenseDto createExpense(ExpenseDto dto) {
-        final Category category = categoryRepo.findById(UUID.fromString(dto.getCategory().getId()))
+        final Category category = categoryRepo.findById(dto.getCategory().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
 
-        final BudgetAccount account = accountRepo.findById(UUID.fromString(dto.getAccount().getId()))
+        final BudgetAccount account = accountRepo.findById(dto.getAccount().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));
 
         final Expense expense = Expense.builder()
-                .amount(Double.parseDouble(dto.getAmount()))
+                .amount(dto.getAmount())
                 .dateCreated(new Date())
                 .account(account)
                 .category(category)
@@ -120,16 +121,16 @@ public class ExpenseService {
     }
 
     public ExpenseDto update(ExpenseDto dto) {
-        Expense expense = expenseRepo.findById(UUID.fromString(dto.getId()))
+        Expense expense = expenseRepo.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Expense not found"));
 
-        final Category category = categoryRepo.findById(UUID.fromString(dto.getCategory().getId()))
+        final Category category = categoryRepo.findById(dto.getCategory().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
 
-        final BudgetAccount account = accountRepo.findById(UUID.fromString(dto.getAccount().getId()))
+        final BudgetAccount account = accountRepo.findById(dto.getAccount().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));
 
-        expense.setAmount(Double.parseDouble(dto.getAmount()));
+        expense.setAmount(dto.getAmount());
         expense.setCategory(category);
         expense.setAccount(account);
 
@@ -138,7 +139,7 @@ public class ExpenseService {
         return mapper.mapTo(expense);
     }
 
-    public void delete(UUID id) {
+    public void delete(Integer id) {
         final Expense expense = expenseRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Expense not found"));
 
@@ -148,7 +149,7 @@ public class ExpenseService {
         accountRepo.save(account);
     }
 
-    public List<ExpenseDto> getExpensesAggregatedMonthly(Pageable pageable, UUID id, String startDate, String endDate) {
+    public List<AggregationResDto> getExpensesAggregatedMonthly(Integer id, String startDate, String endDate) {
         List<Tuple> expenses = null;
 
         try {
@@ -157,7 +158,7 @@ public class ExpenseService {
             //
         }
 
-        List<ExpenseDto> expensesDto = new ArrayList<>();
+        List<AggregationResDto> resDto = new ArrayList<>();
 
         if (expenses != null && !expenses.isEmpty()) {
             for (Tuple t : expenses) {
@@ -165,19 +166,19 @@ public class ExpenseService {
                 Integer year = t.get("year", Integer.class);
                 Double expenseAmount = t.get("total_amount", Double.class);
 
-                ExpenseDto expenseDto = ExpenseDto.builder()
-                        .dateCreated(Month.of(month).toString() + " " + year.toString())
-                        .amount(expenseAmount.toString())
+                AggregationResDto dto = AggregationResDto.builder()
+                        .timePeriod(Month.of(month).toString() + " " + year.toString())
+                        .amount(expenseAmount)
                         .build();
 
-                expensesDto.add(expenseDto);
+                resDto.add(dto);
             }
         }
 
-        return expensesDto;
+        return resDto;
     }
 
-    public List<ExpenseDto> getExpensesAggregatedYearly(Pageable pageable, UUID id, String startDate, String endDate) {
+    public List<AggregationResDto> getExpensesAggregatedYearly(Integer id, String startDate, String endDate) {
         List<Tuple> expenses = null;
 
         try {
@@ -186,23 +187,23 @@ public class ExpenseService {
             //
         }
 
-        List<ExpenseDto> expensesDto = new ArrayList<>();
+        List<AggregationResDto> resDto = new ArrayList<>();
 
         if (expenses != null && !expenses.isEmpty()) {
             for (Tuple t : expenses) {
                 Integer year = t.get("year", Integer.class);
                 Double expenseAmount = t.get("total_amount", Double.class);
 
-                ExpenseDto expenseDto = ExpenseDto.builder()
-                        .dateCreated(year.toString())
-                        .amount(expenseAmount.toString())
+                AggregationResDto dto = AggregationResDto.builder()
+                        .timePeriod(year.toString())
+                        .amount(expenseAmount)
                         .build();
 
-                expensesDto.add(expenseDto);
+                resDto.add(dto);
             }
         }
 
-        return expensesDto;
+        return resDto;
     }
 
     private Date convert(String date) throws ParseException {

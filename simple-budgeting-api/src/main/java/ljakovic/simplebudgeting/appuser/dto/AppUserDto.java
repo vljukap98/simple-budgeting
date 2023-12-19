@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -13,10 +15,10 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppUserDto {
 
-    private String id;
+    private Integer id;
     private String firstName;
     private String lastName;
     private String username;
-    private String dateCreated;
-    private String dateModified;
+    private Date dateCreated;
+    private Date dateModified;
 }

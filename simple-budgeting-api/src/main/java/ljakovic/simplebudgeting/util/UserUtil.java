@@ -9,7 +9,7 @@ import java.util.UUID;
 @Component
 public class UserUtil {
 
-    public UUID getLoggedInUserId() {
+    public Integer getLoggedInUserId() {
         AppUser user = (AppUser) SecurityContextHolder
                 .getContext()
                 .getAuthentication()

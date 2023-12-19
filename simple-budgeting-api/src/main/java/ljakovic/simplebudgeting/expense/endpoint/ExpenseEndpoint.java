@@ -23,14 +23,14 @@ public class ExpenseEndpoint {
     private ExpenseService service;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ExpenseDto> getExpenseById(@PathVariable String id) {
-        return ResponseEntity.ok(service.getById(UUID.fromString(id)));
+    public ResponseEntity<ExpenseDto> getExpenseById(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @GetMapping("/budget-account/{id}")
     @Deprecated
-    public ResponseEntity<List<ExpenseDto>> getExpensesForBudgetAccount(@PathVariable String id) {
-        return ResponseEntity.ok(service.getByBudgetAccountId(UUID.fromString(id)));
+    public ResponseEntity<List<ExpenseDto>> getExpensesForBudgetAccount(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.getByBudgetAccountId(id));
     }
 
     @PostMapping("/budget-account/{id}")
@@ -38,7 +38,7 @@ public class ExpenseEndpoint {
         @RequestParam(value = "size", defaultValue = "10", required = false) int size,
         @RequestParam(value = "page", defaultValue = "0", required = false) int page,
         @RequestBody SearchDto searchDto,
-        @PathVariable String id
+        @PathVariable Integer id
     ) {
         Sort sort = null;
         final Pageable pageable;
@@ -54,7 +54,7 @@ public class ExpenseEndpoint {
             pageable = PageRequest.of(page > 0 ? page - 1 : page, size);
         }
 
-        return ResponseEntity.ok(service.getByBudgetAccountIdPageable(pageable, UUID.fromString(id)));
+        return ResponseEntity.ok(service.getByBudgetAccountIdPageable(pageable, id));
     }
 
     @PostMapping("/search/budget-account/{id}")
@@ -62,11 +62,11 @@ public class ExpenseEndpoint {
             @RequestParam(value = "size", defaultValue = "10", required = false) int size,
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestBody ExpenseSearchDto searchDto,
-            @PathVariable String id
+            @PathVariable Integer id
     ) {
         final Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, size);
 
-        return ResponseEntity.ok(service.searchByBudgetAccountIdPageable(pageable, UUID.fromString(id), searchDto));
+        return ResponseEntity.ok(service.searchByBudgetAccountIdPageable(pageable, id, searchDto));
     }
 
     @PostMapping("/add")
@@ -75,7 +75,7 @@ public class ExpenseEndpoint {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteExpense(@PathVariable String id) {
-        service.delete(UUID.fromString(id));
+    public void deleteExpense(@PathVariable Integer id) {
+        service.delete(id);
     }
 }

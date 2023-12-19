@@ -1,6 +1,7 @@
 package ljakovic.simplebudgeting.aggregation.endpoint;
 
 import ljakovic.simplebudgeting.aggregation.dto.AggregationDto;
+import ljakovic.simplebudgeting.aggregation.dto.AggregationResDto;
 import ljakovic.simplebudgeting.aggregation.service.AggregationService;
 import ljakovic.simplebudgeting.expense.dto.ExpenseDto;
 import ljakovic.simplebudgeting.income.dto.IncomeDto;
@@ -22,27 +23,20 @@ public class AggregationEndpoint {
     private AggregationService service;
 
     @PostMapping("/money-spent/budget-account/{id}")
-    public ResponseEntity<List<ExpenseDto>> aggregateMoneySpent(
+    public ResponseEntity<List<AggregationResDto>> aggregateMoneySpent(
             @RequestBody AggregationDto reqDto,
-            @RequestParam(value = "size", defaultValue = "10", required = false) int size,
-            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-            @PathVariable String id
+            @PathVariable Integer id
             ) {
-        final Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, size);
 
-        return ResponseEntity.ok(service.aggregateMoneySpent(pageable, UUID.fromString(id), reqDto)) ;
+        return ResponseEntity.ok(service.aggregateMoneySpent(id, reqDto)) ;
     }
 
     @PostMapping("/money-earned/budget-account/{id}")
-    public ResponseEntity<List<IncomeDto>> aggregateMoneyEarned(
+    public ResponseEntity<List<AggregationResDto>> aggregateMoneyEarned(
             @RequestBody AggregationDto reqDto,
-            @RequestParam(value = "size", defaultValue = "10", required = false) int size,
-            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-            @PathVariable String id
+            @PathVariable Integer id
     ) {
-        final Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, size);
-
-        return ResponseEntity.ok(service.aggregateMoneyEarned(pageable, UUID.fromString(id), reqDto)) ;
+        return ResponseEntity.ok(service.aggregateMoneyEarned(id, reqDto)) ;
     }
 
 }

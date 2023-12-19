@@ -27,7 +27,7 @@ public interface IncomeRepo extends JpaRepository<Income, UUID>, IncomeSearchRep
             "AND i.dateCreated <= :endDate " +
             "AND i.account.id = :accountId " +
             "GROUP BY month, year")
-    List<Tuple> aggregateMonthly(@Param("accountId") UUID accountId,
+    List<Tuple> aggregateMonthly(@Param("accountId") Integer accountId,
                                 @Param("startDate") Date startDate,
                                 @Param("endDate") Date endDate);
 
@@ -39,7 +39,7 @@ public interface IncomeRepo extends JpaRepository<Income, UUID>, IncomeSearchRep
             "AND i.dateCreated <= :endDate " +
             "AND i.account.id = :accountId " +
             "GROUP BY year")
-    List<Tuple> aggregateYearly(@Param("accountId") UUID accountId,
+    List<Tuple> aggregateYearly(@Param("accountId") Integer accountId,
                                 @Param("startDate") Date startDate,
                                 @Param("endDate") Date endDate);
 }

@@ -4,10 +4,7 @@ import ljakovic.simplebudgeting.budgetaccount.dto.BudgetAccountDto;
 import ljakovic.simplebudgeting.budgetaccount.service.BudgetAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,8 +17,8 @@ public class BudgetAccountEndpoint {
     private BudgetAccountService service;
 
     @GetMapping("/{id}")
-    public ResponseEntity<BudgetAccountDto> getById(@PathVariable String id) {
-        return ResponseEntity.ok(service.getById(UUID.fromString(id)));
+    public ResponseEntity<BudgetAccountDto> getById(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @GetMapping("/user-accounts")
@@ -30,7 +27,12 @@ public class BudgetAccountEndpoint {
     }
 
     @GetMapping("/user/{userId}/{accountId}")
-    public ResponseEntity<BudgetAccountDto> getAccountByIdUserId(@PathVariable String userId, @PathVariable String accountId) {
-        return ResponseEntity.ok(service.getAccountByIdUserId(UUID.fromString(accountId), UUID.fromString(userId)));
+    public ResponseEntity<BudgetAccountDto> getAccountByIdUserId(@PathVariable Integer userId, @PathVariable Integer accountId) {
+        return ResponseEntity.ok(service.getAccountByIdUserId(accountId, userId));
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<BudgetAccountDto> createBudgetAccount() {
+        return ResponseEntity.ok(service.createBudgetAccount());
     }
 }

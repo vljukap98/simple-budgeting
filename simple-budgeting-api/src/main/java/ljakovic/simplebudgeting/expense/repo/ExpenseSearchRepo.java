@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ExpenseSearchRepo {
 
-    List<String> searchExpensesByAccount(
+    List<Integer> searchExpensesByAccount(
             String budgedAccountId,
             Double amountMin,
             Double amountMax,

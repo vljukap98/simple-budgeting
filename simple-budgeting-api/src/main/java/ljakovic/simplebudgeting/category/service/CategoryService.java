@@ -33,7 +33,7 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public CategoryDto getById(UUID id) {
+    public CategoryDto getById(Integer id) {
         final Category category = categoryRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Category not found"));
         return mapper.mapTo(category);
     }
@@ -55,7 +55,7 @@ public class CategoryService {
     }
 
     public CategoryDto update(CategoryDto dto) {
-        final Category category = categoryRepo.findById(UUID.fromString(dto.getId())).orElseThrow(() -> new EntityNotFoundException("Category not found"));
+        final Category category = categoryRepo.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException("Category not found"));
 
         category.setName(dto.getName());
         category.setDescription(dto.getDescription());
@@ -66,7 +66,7 @@ public class CategoryService {
         return mapper.mapTo(category);
     }
 
-    public void delete(UUID id) {
+    public void delete(Integer id) {
         categoryRepo.deleteById(id);
     }
 }

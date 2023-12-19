@@ -10,19 +10,19 @@ import org.springframework.stereotype.Component;
 public class ExpenseMapper {
     public ExpenseDto mapTo(Expense expense) {
         final CategoryDto categoryDto = CategoryDto.builder()
-                .id(expense.getCategory().getId().toString())
+                .id(expense.getCategory().getId())
                 .name(expense.getCategory().getName())
                 .description(expense.getCategory().getDescription())
                 .build();
 
         final BudgetAccountDto accountDto = BudgetAccountDto.builder()
-                .id(expense.getAccount().getId().toString())
+                .id(expense.getAccount().getId())
                 .build();
 
         return ExpenseDto.builder()
-                .id(expense.getId().toString())
-                .amount(expense.getAmount().toString())
-                .dateCreated(expense.getDateCreated().toString())
+                .id(expense.getId())
+                .amount(expense.getAmount())
+                .dateCreated(expense.getDateCreated())
                 .account(accountDto)
                 .category(categoryDto)
                 .build();

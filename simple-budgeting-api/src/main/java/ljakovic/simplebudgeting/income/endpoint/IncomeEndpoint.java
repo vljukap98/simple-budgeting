@@ -24,11 +24,11 @@ public class IncomeEndpoint {
             @RequestParam(value = "size", defaultValue = "10", required = false) int size,
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestBody IncomeSearchDto searchDto,
-            @PathVariable String id
+            @PathVariable Integer id
     ) {
         final Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, size);
 
-        return ResponseEntity.ok(service.searchByBudgetAccountIdPageable(pageable, UUID.fromString(id), searchDto));
+        return ResponseEntity.ok(service.searchByBudgetAccountIdPageable(pageable, id, searchDto));
     }
 
     @PostMapping("/create")

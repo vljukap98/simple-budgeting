@@ -9,16 +9,16 @@ import org.springframework.stereotype.Component;
 public class BudgetAccountMapper {
     public BudgetAccountDto mapTo(BudgetAccount budgetAccount) {
         AppUserDto appUserDto = AppUserDto.builder()
-                .id(budgetAccount.getUser().getId().toString())
+                .id(budgetAccount.getUser().getId())
                 .firstName(budgetAccount.getUser().getFirstName())
                 .lastName(budgetAccount.getUser().getLastName())
                 .build();
 
         return BudgetAccountDto.builder()
-                .id(budgetAccount.getId().toString())
-                .resources(budgetAccount.getTotalResources().toString())
-                .dateCreated(budgetAccount.getDateCreated().toString())
-                .dateModified(budgetAccount.getDateModified().toString())
+                .id(budgetAccount.getId())
+                .resources(budgetAccount.getTotalResources())
+                .dateCreated(budgetAccount.getDateCreated())
+                .dateModified(budgetAccount.getDateModified())
                 .user(appUserDto)
                 .build();
 

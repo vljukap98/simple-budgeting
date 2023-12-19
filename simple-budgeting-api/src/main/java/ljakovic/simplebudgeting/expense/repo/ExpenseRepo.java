@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface ExpenseRepo extends JpaRepository<Expense, UUID>, ExpenseSearchRepo {
+public interface ExpenseRepo extends JpaRepository<Expense, Integer>, ExpenseSearchRepo {
 
     @Query("SELECT e FROM Expense e WHERE e.account.id = ?1")
-    List<Expense> findByBudgetAccountId(UUID id);
+    List<Expense> findByBudgetAccountId(Integer id);
 
     Page<Expense> findByAccount(BudgetAccount account, Pageable pageable);
 
@@ -31,7 +31,7 @@ public interface ExpenseRepo extends JpaRepository<Expense, UUID>, ExpenseSearch
             "AND e.dateCreated <= :endDate " +
             "AND e.account.id = :accountId " +
             "GROUP BY month, year")
-    List<Tuple> aggregateMonthly(@Param("accountId") UUID accountId,
+    List<Tuple> aggregateMonthly(@Param("accountId") Integer accountId,
                                  @Param("startDate") Date startDate,
                                  @Param("endDate") Date endDate);
 
@@ -43,7 +43,7 @@ public interface ExpenseRepo extends JpaRepository<Expense, UUID>, ExpenseSearch
             "AND e.dateCreated <= :endDate " +
             "AND e.account.id = :accountId " +
             "GROUP BY year")
-    List<Tuple> aggregateYearly(@Param("accountId") UUID accountId,
+    List<Tuple> aggregateYearly(@Param("accountId") Integer accountId,
                                 @Param("startDate") Date startDate,
                                 @Param("endDate") Date endDate);
 

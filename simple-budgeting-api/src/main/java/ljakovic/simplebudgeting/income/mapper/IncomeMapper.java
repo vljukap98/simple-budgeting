@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 public class IncomeMapper {
     public IncomeDto mapTo(Income income) {
         final BudgetAccountDto accountDto = BudgetAccountDto.builder()
-                .id(income.getAccount().getId().toString())
+                .id(income.getAccount().getId())
                 .build();
 
         return IncomeDto.builder()
-                .id(income.getId().toString())
-                .amount(income.getAmount().toString())
-                .dateCreated(income.getDateCreated().toString())
+                .id(income.getId())
+                .amount(income.getAmount())
+                .dateCreated(income.getDateCreated())
                 .account(accountDto)
                 .build();
     }

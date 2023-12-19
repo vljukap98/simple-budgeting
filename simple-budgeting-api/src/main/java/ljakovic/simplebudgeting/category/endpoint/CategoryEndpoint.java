@@ -22,8 +22,8 @@ public class CategoryEndpoint {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDto> getById(@PathVariable String id) {
-        return ResponseEntity.ok(service.getById(UUID.fromString(id)));
+    public ResponseEntity<CategoryDto> getById(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PostMapping("/add")
@@ -37,7 +37,7 @@ public class CategoryEndpoint {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteCategory(@PathVariable String id) {
-        service.delete(UUID.fromString(id));
+    public void deleteCategory(@PathVariable Integer id) {
+        service.delete(id);
     }
 }

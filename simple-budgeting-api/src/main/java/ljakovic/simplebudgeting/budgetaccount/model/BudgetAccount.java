@@ -19,8 +19,8 @@ import java.util.UUID;
 public class BudgetAccount {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private Double totalResources = 500D; //default resource amount
     private Date dateCreated;
     private Date dateModified;

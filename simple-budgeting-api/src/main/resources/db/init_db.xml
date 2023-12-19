@@ -1,0 +1,174 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    <!-- AppUser Table -->
+    <changeSet id="createAppUserTable" author="ljakovic">
+        <createTable tableName="app_user">
+            <column name="id" type="SERIAL" >
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(255)"/>
+            <column name="last_name" type="varchar(255)"/>
+            <column name="username" type="varchar(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="password" type="varchar(255)"/>
+            <column name="date_created" type="timestamp"/>
+            <column name="date_modified" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <!-- BudgetAccount Table -->
+    <changeSet id="createBudgetAccountTable" author="ljakovic">
+        <createTable tableName="budget_account">
+            <column name="id" type="SERIAL" >
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="total_resources" type="double precision" defaultValue="500"/>
+            <column name="date_created" type="timestamp"/>
+            <column name="date_modified" type="timestamp"/>
+            <column name="user_id" type="int">
+                <constraints foreignKeyName="fk_budget_account_user" references="app_user(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- CategoryType Table -->
+    <changeSet id="createCategoryTypeTable" author="ljakovic">
+        <createTable tableName="category_type">
+            <column name="id" type="SERIAL" >
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="description" type="varchar(255)"/>
+            <column name="date_created" type="timestamp"/>
+            <column name="date_modified" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Category Table -->
+    <changeSet id="createCategoryTable" author="ljakovic">
+        <createTable tableName="category">
+            <column name="id" type="SERIAL" >
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="description" type="varchar(255)"/>
+            <column name="date_created" type="timestamp"/>
+            <column name="date_modified" type="timestamp"/>
+            <column name="category_type_id" type="int">
+                <constraints foreignKeyName="fk_category_category_type" references="category_type(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Expense Table -->
+    <changeSet id="createExpenseTable" author="ljakovic">
+        <createTable tableName="expense">
+            <column name="id" type="SERIAL" >
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="amount" type="double precision"/>
+            <column name="date_created" type="timestamp"/>
+            <column name="category_id" type="int">
+                <constraints foreignKeyName="fk_expense_category" references="category(id)"/>
+            </column>
+            <column name="account_id" type="int">
+                <constraints foreignKeyName="fk_expense_budget_account" references="budget_account(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Income Table -->
+    <changeSet id="createIncomeTable" author="ljakovic">
+        <createTable tableName="income">
+            <column name="id" type="SERIAL" >
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="amount" type="double precision"/>
+            <column name="date_created" type="timestamp"/>
+            <column name="account_id" type="int">
+                <constraints foreignKeyName="fk_income_budget_account" references="budget_account(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="insertCategoryTypes" author="ljakovic">
+        <insert tableName="category_type">
+            <column name="name" value="Necessity"/>
+            <column name="description" value="Necessity spending should not exceed 50%"/>
+            <column name="date_created" value="NOW()"/>
+            <column name="date_modified" value="NOW()"/>
+        </insert>
+        <insert tableName="category_type">
+            <column name="name" value="Want"/>
+            <column name="description" value="Wants spending should not exceed 30%"/>
+            <column name="date_created" value="NOW()"/>
+            <column name="date_modified" value="NOW()"/>
+        </insert>
+        <insert tableName="category_type">
+            <column name="name" value="Saving"/>
+            <column name="description" value="Savings should not exceed 20%"/>
+            <column name="date_created" value="NOW()"/>
+            <column name="date_modified" value="NOW()"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insertCategories" author="ljakovic">
+        <insert tableName="category">
+            <column name="name" value="Insurance"/>
+            <column name="description" value="Additional Health Insurance"/>
+            <column name="date_created" value="NOW()"/>
+            <column name="date_modified" value="NOW()"/>
+            <column name="category_type_id" value="1"/>
+        </insert>
+        <insert tableName="category">
+            <column name="name" value="Groceries"/>
+            <column name="description" value="Weekly groceries"/>
+            <column name="date_created" value="NOW()"/>
+            <column name="date_modified" value="NOW()"/>
+            <column name="category_type_id" value="1"/>
+        </insert>
+        <insert tableName="category">
+            <column name="name" value="Utility bill"/>
+            <column name="description" value="Monthly bills for water, electricity, gas, etc"/>
+            <column name="date_created" value="NOW()"/>
+            <column name="date_modified" value="NOW()"/>
+            <column name="category_type_id" value="1"/>
+        </insert>
+        <insert tableName="category">
+            <column name="name" value="Rent"/>
+            <column name="description" value="Monthly rent fee"/>
+            <column name="date_created" value="NOW()"/>
+            <column name="date_modified" value="NOW()"/>
+            <column name="category_type_id" value="1"/>
+        </insert>
+        <insert tableName="category">
+            <column name="name" value="Bank Loan"/>
+            <column name="description" value="Monthly bank loan fee"/>
+            <column name="date_created" value="NOW()"/>
+            <column name="date_modified" value="NOW()"/>
+            <column name="category_type_id" value="1"/>
+        </insert>
+        <insert tableName="category">
+            <column name="name" value="Car - Tehnical test"/>
+            <column name="description" value="Annual tehnical test for a car"/>
+            <column name="date_created" value="NOW()"/>
+            <column name="date_modified" value="NOW()"/>
+            <column name="category_type_id" value="1"/>
+        </insert>
+        <insert tableName="category">
+            <column name="name" value="Car - Registration"/>
+            <column name="description" value="Annual car registration fee"/>
+            <column name="date_created" value="NOW()"/>
+            <column name="date_modified" value="NOW()"/>
+            <column name="category_type_id" value="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

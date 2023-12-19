@@ -10,13 +10,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface BudgetAccountRepo extends JpaRepository<BudgetAccount, UUID> {
+public interface BudgetAccountRepo extends JpaRepository<BudgetAccount, Integer> {
 
-    Optional<BudgetAccount> findById(UUID id);
+    Optional<BudgetAccount> findById(Integer id);
 
     @Query("SELECT ba FROM BudgetAccount ba JOIN ba.user u WHERE u.id = ?1")
-    List<BudgetAccount> findByUserId(UUID id);
+    List<BudgetAccount> findByUserId(Integer id);
 
     @Query("SELECT ba FROM BudgetAccount ba JOIN ba.user u WHERE ba.id = ?1 AND u.id = ?2")
-    BudgetAccount findByIdUserId(UUID id, UUID userId);
+    BudgetAccount findByIdUserId(Integer id, Integer userId);
 }

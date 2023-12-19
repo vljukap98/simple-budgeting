@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,11 +16,9 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BudgetAccountDto {
 
-    private String id;
-    private String resources;
-    private String dateCreated;
-    private String dateModified;
+    private Integer id;
+    private Double resources;
+    private Date dateCreated;
+    private Date dateModified;
     private AppUserDto user;
-
-    //TODO: add incomes and expenses
 }

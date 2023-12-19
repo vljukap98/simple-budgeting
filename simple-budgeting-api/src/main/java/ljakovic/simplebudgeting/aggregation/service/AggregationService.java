@@ -1,6 +1,7 @@
 package ljakovic.simplebudgeting.aggregation.service;
 
 import ljakovic.simplebudgeting.aggregation.dto.AggregationDto;
+import ljakovic.simplebudgeting.aggregation.dto.AggregationResDto;
 import ljakovic.simplebudgeting.appuser.service.AppUserService;
 import ljakovic.simplebudgeting.budgetaccount.service.BudgetAccountService;
 import ljakovic.simplebudgeting.expense.dto.ExpenseDto;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,28 +38,28 @@ public class AggregationService {
     @Autowired
     private UserUtil userUtil;
 
-    public List<ExpenseDto> aggregateMoneySpent(Pageable pageable, UUID id, AggregationDto dto) {
-        List<ExpenseDto> expensesAggregated = new ArrayList<>();
+    public List<AggregationResDto> aggregateMoneySpent(Integer id, AggregationDto dto) {
+        List<AggregationResDto> expensesAggregated = new ArrayList<>();
 
         switch (dto.getAggregationType()) {
-            case YEARLY -> expensesAggregated = getExpensesYearly(pageable, id, dto);
-            case MONTHLY -> expensesAggregated = getExpensesMonthly(pageable, id, dto);
+            case YEARLY -> expensesAggregated = getExpensesYearly(id, dto);
+            case MONTHLY -> expensesAggregated = getExpensesMonthly(id, dto);
         }
         return expensesAggregated;
     }
 
-    public List<IncomeDto> aggregateMoneyEarned(Pageable pageable, UUID id, AggregationDto dto) {
-        List<IncomeDto> incomesAggregated = new ArrayList<>();
+    public List<AggregationResDto> aggregateMoneyEarned(Integer id, AggregationDto dto) {
+        List<AggregationResDto> incomesAggregated = new ArrayList<>();
 
         switch (dto.getAggregationType()) {
-            case YEARLY -> incomesAggregated = getIncomesYearly(pageable, id, dto);
-            case MONTHLY -> incomesAggregated = getIncomesMonthly(pageable, id, dto);
+            case YEARLY -> incomesAggregated = getIncomesYearly(id, dto);
+            case MONTHLY -> incomesAggregated = getIncomesMonthly(id, dto);
         }
 
         return incomesAggregated;
     }
 
-    private List<ExpenseDto> getExpensesMonthly(Pageable pageable, UUID id, AggregationDto dto) {
+    private List<AggregationResDto> getExpensesMonthly(Integer id, AggregationDto dto) {
         final LocalDate today = LocalDate.now();
         final LocalDate aggregatePeriod = today.withDayOfMonth(1)
                 .minusMonths(dto.getAggregationTime());
@@ -66,10 +68,10 @@ public class AggregationService {
         String aggregatePeriodDate = formatLocalDate(aggregatePeriod);
 
         return expenseService
-                .getExpensesAggregatedMonthly(pageable, id, aggregatePeriodDate, todayDate);
+                .getExpensesAggregatedMonthly(id, aggregatePeriodDate, todayDate);
     }
 
-    private List<ExpenseDto> getExpensesYearly(Pageable pageable, UUID id, AggregationDto dto) {
+    private List<AggregationResDto> getExpensesYearly(Integer id, AggregationDto dto) {
         final LocalDate today = LocalDate.now();
         final LocalDate aggregatePeriod = today.minusYears(dto.getAggregationTime());
 
@@ -77,10 +79,10 @@ public class AggregationService {
         String aggregatePeriodDate = formatLocalDate(aggregatePeriod);
 
         return expenseService
-                .getExpensesAggregatedYearly(pageable, id, aggregatePeriodDate, todayDate);
+                .getExpensesAggregatedYearly(id, aggregatePeriodDate, todayDate);
     }
 
-    private List<IncomeDto> getIncomesMonthly(Pageable pageable, UUID id, AggregationDto dto) {
+    private List<AggregationResDto> getIncomesMonthly(Integer id, AggregationDto dto) {
         final LocalDate today = LocalDate.now();
         final LocalDate aggregatePeriod = today.withDayOfMonth(1)
                 .minusMonths(dto.getAggregationTime());
@@ -89,10 +91,10 @@ public class AggregationService {
         String aggregatePeriodDate = formatLocalDate(aggregatePeriod);
 
         return incomeService
-                .getIncomesAggregatedMonthly(pageable, id, aggregatePeriodDate, todayDate);
+                .getIncomesAggregatedMonthly(id, aggregatePeriodDate, todayDate);
     }
 
-    private List<IncomeDto> getIncomesYearly(Pageable pageable, UUID id, AggregationDto dto) {
+    private List<AggregationResDto> getIncomesYearly(Integer id, AggregationDto dto) {
         final LocalDate today = LocalDate.now();
         final LocalDate aggregatePeriod = today.minusYears(dto.getAggregationTime());
 
@@ -100,12 +102,20 @@ public class AggregationService {
         String aggregatePeriodDate = formatLocalDate(aggregatePeriod);
 
         return incomeService
-                .getIncomesAggregatedYearly(pageable, id, aggregatePeriodDate, todayDate);
+                .getIncomesAggregatedYearly(id, aggregatePeriodDate, todayDate);
     }
 
     public static String formatLocalDate(LocalDate localDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         return localDate.format(formatter);
+    }
+
+    private static Date convertLocalDateToDate(LocalDate localDate) {
+        // Get the number of days between the epoch day and the specified LocalDate
+        long epochDay = localDate.toEpochDay();
+
+        // Create a Date object using the obtained value
+        return new Date(epochDay * 24 * 60 * 60 * 1000); // Convert days to milliseconds
     }
 }
