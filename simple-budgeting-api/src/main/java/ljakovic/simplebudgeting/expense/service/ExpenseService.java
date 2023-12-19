@@ -1,6 +1,7 @@
 package ljakovic.simplebudgeting.expense.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.Tuple;
 import ljakovic.simplebudgeting.budgetaccount.model.BudgetAccount;
 import ljakovic.simplebudgeting.budgetaccount.repo.BudgetAccountRepo;
 import ljakovic.simplebudgeting.category.model.Category;
@@ -15,6 +16,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -142,5 +148,66 @@ public class ExpenseService {
         accountRepo.save(account);
     }
 
+    public List<ExpenseDto> getExpensesAggregatedMonthly(Pageable pageable, UUID id, String startDate, String endDate) {
+        List<Tuple> expenses = null;
+
+        try {
+            expenses = expenseRepo.aggregateMonthly(id, convert(startDate), convert(endDate));
+        } catch (Exception e) {
+            //
+        }
+
+        List<ExpenseDto> expensesDto = new ArrayList<>();
+
+        if (expenses != null && !expenses.isEmpty()) {
+            for (Tuple t : expenses) {
+                Integer month = t.get("month", Integer.class);
+                Integer year = t.get("year", Integer.class);
+                Double expenseAmount = t.get("total_amount", Double.class);
+
+                ExpenseDto expenseDto = ExpenseDto.builder()
+                        .dateCreated(Month.of(month).toString() + " " + year.toString())
+                        .amount(expenseAmount.toString())
+                        .build();
+
+                expensesDto.add(expenseDto);
+            }
+        }
+
+        return expensesDto;
+    }
+
+    public List<ExpenseDto> getExpensesAggregatedYearly(Pageable pageable, UUID id, String startDate, String endDate) {
+        List<Tuple> expenses = null;
+
+        try {
+            expenses = expenseRepo.aggregateYearly(id, convert(startDate), convert(endDate));
+        } catch (Exception e) {
+            //
+        }
+
+        List<ExpenseDto> expensesDto = new ArrayList<>();
+
+        if (expenses != null && !expenses.isEmpty()) {
+            for (Tuple t : expenses) {
+                Integer year = t.get("year", Integer.class);
+                Double expenseAmount = t.get("total_amount", Double.class);
+
+                ExpenseDto expenseDto = ExpenseDto.builder()
+                        .dateCreated(year.toString())
+                        .amount(expenseAmount.toString())
+                        .build();
+
+                expensesDto.add(expenseDto);
+            }
+        }
+
+        return expensesDto;
+    }
+
+    private Date convert(String date) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.parse(date);
+    }
 
 }

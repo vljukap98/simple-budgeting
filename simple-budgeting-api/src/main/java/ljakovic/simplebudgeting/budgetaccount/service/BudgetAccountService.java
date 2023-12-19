@@ -23,15 +23,20 @@ public class BudgetAccountService {
     @Autowired
     private UserUtil userUtil;
 
-    public BudgetAccountDto getById(UUID uuid) {
-        BudgetAccount budgetAccount = repo.findById(uuid)
+    public BudgetAccount getBudgetAccountById(UUID id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Budget account not found"));
+    }
+
+    public BudgetAccountDto getById(UUID id) {
+        BudgetAccount budgetAccount = repo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Budget account not found"));
 
         return mapper.mapTo(budgetAccount);
     }
 
     public List<BudgetAccountDto> getUserAccounts() {
-        final UUID loggedInUserId = UUID.fromString(userUtil.getLoggedInUserId());
+        final UUID loggedInUserId = userUtil.getLoggedInUserId();
 
         return repo.findByUserId(loggedInUserId).stream()
                 .map(mapper::mapTo)
