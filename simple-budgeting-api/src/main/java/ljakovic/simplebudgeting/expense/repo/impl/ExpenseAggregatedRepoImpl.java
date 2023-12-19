@@ -1,17 +1,15 @@
-package ljakovic.simplebudgeting.income.repo.impl;
+package ljakovic.simplebudgeting.expense.repo.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.Tuple;
 import ljakovic.simplebudgeting.aggregation.dto.AggregationTypeEnum;
-import ljakovic.simplebudgeting.income.repo.IncomeAggregatedRepo;
+import ljakovic.simplebudgeting.expense.repo.ExpenseAggregatedRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public class IncomeAggregatedRepoImpl implements IncomeAggregatedRepo {
+public class ExpenseAggregatedRepoImpl implements ExpenseAggregatedRepo {
 
     @Autowired
     private EntityManager em;
@@ -27,14 +25,14 @@ public class IncomeAggregatedRepoImpl implements IncomeAggregatedRepo {
         query.append("SELECT ");
 
         if (aggregationType.equals(AggregationTypeEnum.MONTHLY)) {
-            query.append("EXTRACT(MONTH FROM i.date_created) AS month, ");
+            query.append("EXTRACT(MONTH FROM e.date_created) AS month, ");
         }
 
-            query.append("EXTRACT(YEAR from i.date_created) AS year, ")
-                .append("SUM(i.amount) AS total_amount ")
-                .append("FROM income i ")
-                .append("WHERE i.account_id = ").append(accountId).append(" ")
-                .append("AND DATE(i.date_created) BETWEEN '").append(startDate).append("' ")
+        query.append("EXTRACT(YEAR from e.date_created) AS year, ")
+                .append("SUM(e.amount) AS total_amount ")
+                .append("FROM expense e ")
+                .append("WHERE e.account_id = ").append(accountId).append(" ")
+                .append("AND DATE(e.date_created) BETWEEN '").append(startDate).append("' ")
                 .append("AND '").append(endDate).append("' ");
 
         if (aggregationType.equals(AggregationTypeEnum.MONTHLY)) {

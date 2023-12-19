@@ -3,9 +3,9 @@ package ljakovic.simplebudgeting.income.service;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Tuple;
 import ljakovic.simplebudgeting.aggregation.dto.AggregationResDto;
+import ljakovic.simplebudgeting.aggregation.dto.AggregationTypeEnum;
 import ljakovic.simplebudgeting.budgetaccount.model.BudgetAccount;
 import ljakovic.simplebudgeting.budgetaccount.repo.BudgetAccountRepo;
-import ljakovic.simplebudgeting.expense.dto.ExpenseDto;
 import ljakovic.simplebudgeting.income.dto.IncomeDto;
 import ljakovic.simplebudgeting.income.dto.IncomeSearchDto;
 import ljakovic.simplebudgeting.income.mapper.IncomeMapper;
@@ -89,51 +89,30 @@ public class IncomeService {
         accountRepo.save(account);
     }
 
-    public List<AggregationResDto> getIncomesAggregatedYearly(Integer id, String startDate, String endDate) {
-        List<Tuple> incomes = null;
-
-        try {
-            incomes = incomeRepo.aggregateYearly(id, convert(startDate), convert(endDate));
-        } catch (Exception e) {
-            //
-        }
+    public List<AggregationResDto> getIncomesAggregated(
+            Integer id,
+            String startDate,
+            String endDate,
+            AggregationTypeEnum aggregationType) {
+        List<Tuple> incomes = incomeRepo.aggregate(id, startDate, endDate, aggregationType);
 
         List<AggregationResDto> resDto = new ArrayList<>();
 
         if (incomes != null && !incomes.isEmpty()) {
             for (Tuple t : incomes) {
-                Integer year = t.get("year", Integer.class);
-                Double expenseAmount = t.get("total_amount", Double.class);
-
-                AggregationResDto dto = AggregationResDto.builder()
-                        .timePeriod(year.toString())
-                        .amount(expenseAmount)
-                        .build();
-
-                resDto.add(dto);
-            }
-        }
-
-        return resDto;
-    }
-
-    public List<AggregationResDto> getIncomesAggregatedMonthly(Integer id, String startDate, String endDate) {
-        List<Tuple> incomes = null;
-
-        incomes = incomeRepo.aggregateMonthly(id, startDate, endDate);
-
-        List<AggregationResDto> resDto = new ArrayList<>();
-
-        if (incomes != null && !incomes.isEmpty()) {
-            for (Tuple t : incomes) {
-                BigDecimal month = t.get("month", BigDecimal.class);
                 BigDecimal year = t.get("year", BigDecimal.class);
                 Double expenseAmount = t.get("total_amount", Double.class);
 
                 AggregationResDto dto = AggregationResDto.builder()
-                        .timePeriod(Month.of(month.intValue()).toString() + " " + year.toString())
                         .amount(expenseAmount)
                         .build();
+
+                if (aggregationType.equals(AggregationTypeEnum.MONTHLY)) {
+                    BigDecimal month = t.get("month", BigDecimal.class);
+                    dto.setTimePeriod(Month.of(month.intValue()).toString() + " " + year.toString());
+                } else {
+                    dto.setTimePeriod(year.toString());
+                }
 
                 resDto.add(dto);
             }

@@ -3,6 +3,7 @@ package ljakovic.simplebudgeting.expense.service;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Tuple;
 import ljakovic.simplebudgeting.aggregation.dto.AggregationResDto;
+import ljakovic.simplebudgeting.aggregation.dto.AggregationTypeEnum;
 import ljakovic.simplebudgeting.budgetaccount.model.BudgetAccount;
 import ljakovic.simplebudgeting.budgetaccount.repo.BudgetAccountRepo;
 import ljakovic.simplebudgeting.category.model.Category;
@@ -149,66 +150,37 @@ public class ExpenseService {
         accountRepo.save(account);
     }
 
-    public List<AggregationResDto> getExpensesAggregatedMonthly(Integer id, String startDate, String endDate) {
-        List<Tuple> expenses = null;
+    public List<AggregationResDto> getExpensesAggregated(
+            Integer id,
+            String startDate,
+            String endDate,
+            AggregationTypeEnum aggregationType) {
 
-        try {
-            expenses = expenseRepo.aggregateMonthly(id, convert(startDate), convert(endDate));
-        } catch (Exception e) {
-            //
-        }
+        List<Tuple> expenses = expenseRepo.aggregate(id, startDate, endDate, aggregationType);
 
         List<AggregationResDto> resDto = new ArrayList<>();
 
         if (expenses != null && !expenses.isEmpty()) {
             for (Tuple t : expenses) {
-                Integer month = t.get("month", Integer.class);
-                Integer year = t.get("year", Integer.class);
+                BigDecimal year = t.get("year", BigDecimal.class);
                 Double expenseAmount = t.get("total_amount", Double.class);
 
                 AggregationResDto dto = AggregationResDto.builder()
-                        .timePeriod(Month.of(month).toString() + " " + year.toString())
                         .amount(expenseAmount)
                         .build();
+
+                if (aggregationType.equals(AggregationTypeEnum.MONTHLY)) {
+                    BigDecimal month = t.get("month", BigDecimal.class);
+                    dto.setTimePeriod(Month.of(month.intValue()).toString() + " " + year.toString());
+                } else {
+                    dto.setTimePeriod(year.toString());
+                }
 
                 resDto.add(dto);
             }
         }
 
         return resDto;
-    }
-
-    public List<AggregationResDto> getExpensesAggregatedYearly(Integer id, String startDate, String endDate) {
-        List<Tuple> expenses = null;
-
-        try {
-            expenses = expenseRepo.aggregateYearly(id, convert(startDate), convert(endDate));
-        } catch (Exception e) {
-            //
-        }
-
-        List<AggregationResDto> resDto = new ArrayList<>();
-
-        if (expenses != null && !expenses.isEmpty()) {
-            for (Tuple t : expenses) {
-                Integer year = t.get("year", Integer.class);
-                Double expenseAmount = t.get("total_amount", Double.class);
-
-                AggregationResDto dto = AggregationResDto.builder()
-                        .timePeriod(year.toString())
-                        .amount(expenseAmount)
-                        .build();
-
-                resDto.add(dto);
-            }
-        }
-
-        return resDto;
-    }
-
-    private Date convert(String date) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return dateFormat.parse(date);
     }
 
 }

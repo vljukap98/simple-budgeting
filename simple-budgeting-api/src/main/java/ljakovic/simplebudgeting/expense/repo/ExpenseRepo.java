@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface ExpenseRepo extends JpaRepository<Expense, Integer>, ExpenseSearchRepo {
+public interface ExpenseRepo extends JpaRepository<Expense, Integer>, ExpenseSearchRepo, ExpenseAggregatedRepo {
 
     @Query("SELECT e FROM Expense e WHERE e.account.id = ?1")
     List<Expense> findByBudgetAccountId(Integer id);
