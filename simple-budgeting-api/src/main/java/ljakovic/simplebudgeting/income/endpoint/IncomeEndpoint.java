@@ -37,7 +37,7 @@ public class IncomeEndpoint {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteExpense(@PathVariable Integer id) {
+    public void deleteIncome(@PathVariable Integer id) {
         service.delete(id);
     }
 }
