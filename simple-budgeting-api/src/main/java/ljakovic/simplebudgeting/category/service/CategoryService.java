@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,7 +38,7 @@ public class CategoryService {
     }
 
     public CategoryDto create(CategoryDto dto) {
-        final CategoryType categoryType = categoryTypeRepo.findById(UUID.fromString(dto.getCategoryType().getId()))
+        final CategoryType categoryType = categoryTypeRepo.findById(dto.getCategoryType().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Category type not found"));
         final Category category = Category.builder()
                 .name(dto.getName())

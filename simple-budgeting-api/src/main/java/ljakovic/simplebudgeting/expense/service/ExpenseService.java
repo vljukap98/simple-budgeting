@@ -19,13 +19,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service

@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryTypeDto {
-    private String id;
+    private Integer id;
     private String name;
 }

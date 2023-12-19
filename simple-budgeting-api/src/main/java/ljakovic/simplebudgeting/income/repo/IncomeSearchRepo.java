@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IncomeSearchRepo {
 
-    List<String> searchIncomeByAccount(
+    List<Integer> searchIncomeByAccount(
             String budgedAccountId,
             Double amountMin,
             Double amountMax,

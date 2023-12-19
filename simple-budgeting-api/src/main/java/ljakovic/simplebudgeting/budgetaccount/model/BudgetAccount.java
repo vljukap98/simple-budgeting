@@ -1,7 +1,13 @@
 package ljakovic.simplebudgeting.budgetaccount.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import ljakovic.simplebudgeting.appuser.model.AppUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +15,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -21,7 +26,7 @@ public class BudgetAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Double totalResources = 500D; //default resource amount
+    private Double totalResources;
     private Date dateCreated;
     private Date dateModified;
 

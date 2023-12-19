@@ -1,8 +1,6 @@
 package ljakovic.simplebudgeting.aggregation.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import ljakovic.simplebudgeting.expense.dto.ExpenseSearchDto;
-import ljakovic.simplebudgeting.income.dto.IncomeSearchDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class CategoryMapper {
     public CategoryDto mapTo(Category category) {
         final CategoryTypeDto categoryType = CategoryTypeDto.builder()
-                .id(category.getCategoryType().getId().toString())
+                .id(category.getCategoryType().getId())
                 .name(category.getCategoryType().getName())
                 .build();
 

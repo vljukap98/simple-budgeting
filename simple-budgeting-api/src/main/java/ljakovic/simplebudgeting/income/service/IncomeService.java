@@ -22,7 +22,6 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,7 +46,7 @@ public class IncomeService {
         Date startDate = searchDto.getStartDate();
         Date endDate = searchDto.getEndDate();
 
-        final List<String> incomeIds = incomeRepo.searchIncomeByAccount(
+        final List<Integer> incomeIds = incomeRepo.searchIncomeByAccount(
                 accountId,
                 amountMin,
                 amountMax,
@@ -56,7 +55,7 @@ public class IncomeService {
                 pageable
         );
 
-        return incomeRepo.findAllById(incomeIds.stream().map(UUID::fromString).collect(Collectors.toList()))
+        return incomeRepo.findAllById(incomeIds)
                 .stream()
                 .map(mapper::mapTo)
                 .collect(Collectors.toList());
@@ -79,7 +78,7 @@ public class IncomeService {
         return mapper.mapTo(income);
     }
 
-    public void delete(UUID id) {
+    public void delete(Integer id) {
         final Income income = incomeRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Income entity not found"));
 
