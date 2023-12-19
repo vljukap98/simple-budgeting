@@ -31,7 +31,9 @@ public interface ExpenseRepo extends JpaRepository<Expense, UUID>, ExpenseSearch
             "AND e.dateCreated <= :endDate " +
             "AND e.account.id = :accountId " +
             "GROUP BY month, year")
-    List<Tuple> aggregateMonthly(@Param("accountId") UUID accountId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    List<Tuple> aggregateMonthly(@Param("accountId") UUID accountId,
+                                 @Param("startDate") Date startDate,
+                                 @Param("endDate") Date endDate);
 
     @Query("SELECT " +
             "YEAR(e.dateCreated) AS year, " +
@@ -41,6 +43,8 @@ public interface ExpenseRepo extends JpaRepository<Expense, UUID>, ExpenseSearch
             "AND e.dateCreated <= :endDate " +
             "AND e.account.id = :accountId " +
             "GROUP BY year")
-    List<Tuple> aggregateYearly(@Param("accountId") UUID accountId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    List<Tuple> aggregateYearly(@Param("accountId") UUID accountId,
+                                @Param("startDate") Date startDate,
+                                @Param("endDate") Date endDate);
 
 }

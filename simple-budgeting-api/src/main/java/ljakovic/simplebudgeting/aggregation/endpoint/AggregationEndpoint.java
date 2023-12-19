@@ -21,8 +21,8 @@ public class AggregationEndpoint {
     @Autowired
     private AggregationService service;
 
-    @PostMapping("/money-earned/budget-account/{id}")
-    public ResponseEntity<List<ExpenseDto>> aggregateMoneyEarned(
+    @PostMapping("/money-spent/budget-account/{id}")
+    public ResponseEntity<List<ExpenseDto>> aggregateMoneySpent(
             @RequestBody AggregationDto reqDto,
             @RequestParam(value = "size", defaultValue = "10", required = false) int size,
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
@@ -31,6 +31,18 @@ public class AggregationEndpoint {
         final Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, size);
 
         return ResponseEntity.ok(service.aggregateMoneySpent(pageable, UUID.fromString(id), reqDto)) ;
+    }
+
+    @PostMapping("/money-earned/budget-account/{id}")
+    public ResponseEntity<List<IncomeDto>> aggregateMoneyEarned(
+            @RequestBody AggregationDto reqDto,
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size,
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @PathVariable String id
+    ) {
+        final Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, size);
+
+        return ResponseEntity.ok(service.aggregateMoneyEarned(pageable, UUID.fromString(id), reqDto)) ;
     }
 
 }
