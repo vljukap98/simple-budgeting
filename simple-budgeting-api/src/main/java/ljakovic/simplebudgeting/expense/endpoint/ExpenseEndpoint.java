@@ -73,6 +73,11 @@ public class ExpenseEndpoint {
         return ResponseEntity.ok(service.createExpense(dto));
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<ExpenseDto> updateExpense(@RequestBody ExpenseDto dto) {
+        return ResponseEntity.ok(service.update(dto));
+    }
+
     @DeleteMapping("/delete/{id}")
     public void deleteExpense(@PathVariable Integer id) {
         service.delete(id);

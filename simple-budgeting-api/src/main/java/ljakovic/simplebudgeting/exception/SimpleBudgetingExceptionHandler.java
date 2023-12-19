@@ -46,4 +46,11 @@ public class SimpleBudgetingExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(e.getMessage());
     }
+
+    @ExceptionHandler({UnsupportedOperationException.class})
+    public ResponseEntity<Object> handleUnsupportedOperationException(UnsupportedOperationException e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(e.getMessage());
+    }
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Tuple;
 import ljakovic.simplebudgeting.aggregation.dto.AggregationResDto;
 import ljakovic.simplebudgeting.aggregation.dto.AggregationTypeEnum;
+import ljakovic.simplebudgeting.appuser.model.AppUser;
+import ljakovic.simplebudgeting.appuser.service.AppUserService;
 import ljakovic.simplebudgeting.budgetaccount.model.BudgetAccount;
 import ljakovic.simplebudgeting.budgetaccount.repo.BudgetAccountRepo;
 import ljakovic.simplebudgeting.category.model.Category;
@@ -13,6 +15,7 @@ import ljakovic.simplebudgeting.expense.dto.ExpenseSearchDto;
 import ljakovic.simplebudgeting.expense.mapper.ExpenseMapper;
 import ljakovic.simplebudgeting.expense.model.Expense;
 import ljakovic.simplebudgeting.expense.repo.ExpenseRepo;
+import ljakovic.simplebudgeting.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +41,13 @@ public class ExpenseService {
     private BudgetAccountRepo accountRepo;
 
     @Autowired
+    private AppUserService appUserService;
+
+    @Autowired
     private ExpenseMapper mapper;
+
+    @Autowired
+    private UserUtil util;
 
     public List<ExpenseDto> getByBudgetAccountIdPageable(Pageable pageable, Integer budgetAccountId) {
         final BudgetAccount account = accountRepo.findById(budgetAccountId)
@@ -119,14 +128,20 @@ public class ExpenseService {
     }
 
     public ExpenseDto update(ExpenseDto dto) {
+        final BudgetAccount account = accountRepo.findById(dto.getAccount().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Account not found"));
+
+        if (!accountBelongsToLoggedInUser(account)) {
+            throw new UnsupportedOperationException("Unable to edit expense");
+        }
+
         Expense expense = expenseRepo.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Expense not found"));
 
         final Category category = categoryRepo.findById(dto.getCategory().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
 
-        final BudgetAccount account = accountRepo.findById(dto.getAccount().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Account not found"));
+        account.setTotalResources(account.getTotalResources() - expense.getAmount());
 
         expense.setAmount(dto.getAmount());
         expense.setCategory(category);
@@ -134,9 +149,10 @@ public class ExpenseService {
 
         expenseRepo.save(expense);
 
+        account.setTotalResources(account.getTotalResources() + expense.getAmount());
+
         return mapper.mapTo(expense);
     }
-
     public void delete(Integer id) {
         final Expense expense = expenseRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Expense not found"));
@@ -178,6 +194,12 @@ public class ExpenseService {
         }
 
         return resDto;
+    }
+
+    private boolean accountBelongsToLoggedInUser(BudgetAccount account) {
+        List<BudgetAccount> accounts = accountRepo.findByUserId(util.getLoggedInUserId());
+
+        return accounts.contains(account);
     }
 
 }
