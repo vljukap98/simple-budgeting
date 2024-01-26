@@ -4,7 +4,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Tuple;
 import ljakovic.simplebudgeting.aggregation.dto.AggregationResDto;
 import ljakovic.simplebudgeting.aggregation.dto.AggregationTypeEnum;
-import ljakovic.simplebudgeting.appuser.model.AppUser;
 import ljakovic.simplebudgeting.appuser.service.AppUserService;
 import ljakovic.simplebudgeting.budgetaccount.model.BudgetAccount;
 import ljakovic.simplebudgeting.budgetaccount.repo.BudgetAccountRepo;
@@ -15,6 +14,7 @@ import ljakovic.simplebudgeting.expense.dto.ExpenseSearchDto;
 import ljakovic.simplebudgeting.expense.mapper.ExpenseMapper;
 import ljakovic.simplebudgeting.expense.model.Expense;
 import ljakovic.simplebudgeting.expense.repo.ExpenseRepo;
+import ljakovic.simplebudgeting.expense.repo.impl.dto.ExpenseQueryRepoDto;
 import ljakovic.simplebudgeting.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,6 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ExpenseService {
@@ -57,35 +56,25 @@ public class ExpenseService {
 
         return expenses.getContent().stream()
                 .map(mapper::mapTo)
-                .collect(Collectors.toList());
+                .toList();
     }
     public List<ExpenseDto> searchByBudgetAccountIdPageable(Pageable pageable, Integer budgedAccountId, ExpenseSearchDto searchDto) {
-        final BudgetAccount account = accountRepo.findById(budgedAccountId)
-                .orElseThrow(() -> new EntityNotFoundException("Budget account not found"));
+        ExpenseQueryRepoDto dto = ExpenseQueryRepoDto.builder()
+                .budgedAccountId(budgedAccountId.toString())
+                .amountMin(searchDto.getAmountMin())
+                .amountMax(searchDto.getAmountMax())
+                .startDate(searchDto.getStartDate())
+                .endDate(searchDto.getEndDate())
+                .categoryNames(searchDto.getCategoryNames())
+                .categoryTypes(searchDto.getCategoryTypes())
+                .build();
 
-        String accountId = budgedAccountId.toString();
-        Double amountMin = searchDto.getAmountMin();
-        Double amountMax = searchDto.getAmountMax();
-        Date startDate = searchDto.getStartDate();
-        Date endDate = searchDto.getEndDate();
-        List<String> categoryNames = searchDto.getCategoryNames();
-        List<String> categoryTypes = searchDto.getCategoryTypes();
 
-
-        final List<Integer> expenseIds = expenseRepo.searchExpensesByAccount(
-                accountId,
-                amountMin,
-                amountMax,
-                startDate,
-                endDate,
-                categoryNames,
-                categoryTypes,
-                pageable
-        );
+        final List<Integer> expenseIds = expenseRepo.searchExpensesByAccount(dto, pageable);
 
         return expenseRepo.findAllById(expenseIds).stream()
                 .map(mapper::mapTo)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<ExpenseDto> getByBudgetAccountId(Integer budgetAccountId) {
@@ -93,7 +82,7 @@ public class ExpenseService {
 
         return expenses.stream()
                 .map(mapper::mapTo)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ExpenseDto getById(Integer id) {

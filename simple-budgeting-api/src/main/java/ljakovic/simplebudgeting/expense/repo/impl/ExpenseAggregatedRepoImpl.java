@@ -5,11 +5,15 @@ import jakarta.persistence.Query;
 import jakarta.persistence.Tuple;
 import ljakovic.simplebudgeting.aggregation.dto.AggregationTypeEnum;
 import ljakovic.simplebudgeting.expense.repo.ExpenseAggregatedRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class ExpenseAggregatedRepoImpl implements ExpenseAggregatedRepo {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseAggregatedRepoImpl.class);
 
     @Autowired
     private EntityManager em;
@@ -41,7 +45,7 @@ public class ExpenseAggregatedRepoImpl implements ExpenseAggregatedRepo {
             query.append("GROUP BY year");
         }
 
-        System.out.println(query);
+        LOGGER.info("{}", query);
 
         Query q = em.createNativeQuery(query.toString(), Tuple.class);
 

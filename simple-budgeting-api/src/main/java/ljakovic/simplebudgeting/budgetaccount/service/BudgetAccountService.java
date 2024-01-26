@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BudgetAccountService {
@@ -44,7 +43,7 @@ public class BudgetAccountService {
 
         return accountRepo.findByUserId(loggedInUserId).stream()
                 .map(mapper::mapTo)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public BudgetAccountDto getAccountByIdUserId(Integer id, Integer userId) {

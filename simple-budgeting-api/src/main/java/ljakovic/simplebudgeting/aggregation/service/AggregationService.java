@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,13 +36,17 @@ public class AggregationService {
     public List<AggregationResDto> aggregateMoneySpent(Integer id, AggregationDto dto) {
         LocalDate today = LocalDate.now();
         LocalDate aggregatePeriod = null;
-        List<AggregationResDto> aggregatedIncomes = new ArrayList<>();
+        List<AggregationResDto> aggregatedIncomes;
 
         if (dto.getAggregationType().equals(AggregationTypeEnum.MONTHLY)) {
             aggregatePeriod = today.withDayOfMonth(1)
-                    .minusMonths(dto.getAggregationTime() - 1);
+                    .minusMonths(dto.getAggregationTime() - 1L);
         } else if (dto.getAggregationType().equals(AggregationTypeEnum.YEARLY)) {
             aggregatePeriod = today.minusYears(dto.getAggregationTime());
+        }
+
+        if (aggregatePeriod == null) {
+            throw new UnsupportedOperationException("Unable to calculate aggregate period");
         }
 
         String todayDate = formatLocalDate(today);
@@ -58,13 +61,17 @@ public class AggregationService {
     public List<AggregationResDto> aggregateMoneyEarned(Integer id, AggregationDto dto) {
         LocalDate today = LocalDate.now();
         LocalDate aggregatePeriod = null;
-        List<AggregationResDto> aggregatedIncomes = new ArrayList<>();
+        List<AggregationResDto> aggregatedIncomes;
 
         if (dto.getAggregationType().equals(AggregationTypeEnum.MONTHLY)) {
             aggregatePeriod = today.withDayOfMonth(1)
-                    .minusMonths(dto.getAggregationTime() - 1);
+                    .minusMonths(dto.getAggregationTime() - 1L);
         } else if (dto.getAggregationType().equals(AggregationTypeEnum.YEARLY)) {
             aggregatePeriod = today.minusYears(dto.getAggregationTime());
+        }
+
+        if (aggregatePeriod == null) {
+            throw new UnsupportedOperationException("Unable to calculate aggregate period");
         }
 
         String todayDate = formatLocalDate(today);
