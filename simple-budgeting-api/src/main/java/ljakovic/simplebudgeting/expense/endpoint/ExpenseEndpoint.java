@@ -26,12 +26,6 @@ public class ExpenseEndpoint {
         return ResponseEntity.ok(service.getById(id));
     }
 
-    @GetMapping("/budget-account/{id}")
-    @Deprecated
-    public ResponseEntity<List<ExpenseDto>> getExpensesForBudgetAccount(@PathVariable Integer id) {
-        return ResponseEntity.ok(service.getByBudgetAccountId(id));
-    }
-
     @PostMapping("/budget-account/{id}")
     public ResponseEntity<List<ExpenseDto>> searchExpensesForBudgetAccountPageable(
         @RequestParam(value = "size", defaultValue = "10", required = false) int size,

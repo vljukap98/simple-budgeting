@@ -3,6 +3,7 @@ package ljakovic.simplebudgeting.expense.repo.impl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import ljakovic.simplebudgeting.expense.repo.ExpenseSearchRepo;
+import ljakovic.simplebudgeting.expense.repo.impl.dto.ExpenseQueryRepoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -19,13 +20,7 @@ public class ExpenseSearchRepoImpl implements ExpenseSearchRepo {
 
     @Override
     public List<Integer> searchExpensesByAccount(
-            String budgedAccountId,
-            Double amountMin,
-            Double amountMax,
-            Date startDate,
-            Date endDate,
-            List<String> categoryNames,
-            List<String> categoryTypes,
+            ExpenseQueryRepoDto dto,
             Pageable pageable) {
         final StringBuilder query = new StringBuilder();
 
@@ -33,88 +28,77 @@ public class ExpenseSearchRepoImpl implements ExpenseSearchRepo {
                 .append(" INNER JOIN budget_account ba on ba.id = e.account_id");
 
         final StringBuilder join = new StringBuilder();
-        join(join, categoryNames, categoryTypes);
+        join(join, dto);
         query.append(join);
 
         final StringBuilder where = new StringBuilder();
-        where(where, budgedAccountId, amountMin, amountMax, startDate, endDate, categoryNames, categoryTypes);
+        where(where, dto);
         query.append(where);
 
         Query q = em.createNativeQuery(query.toString(), Integer.class);
-        params(q, amountMin, amountMax, startDate, endDate, categoryNames, categoryTypes);
+        params(q, dto);
         q.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
         q.setMaxResults(pageable.getPageSize());
 
         return q.getResultList();
     }
 
-    private void join(StringBuilder join, List<String> categoryNames, List<String> categoryTypes) {
-        if (!CollectionUtils.isEmpty(categoryTypes)) {
+    private void join(StringBuilder join, ExpenseQueryRepoDto dto) {
+        if (!CollectionUtils.isEmpty(dto.getCategoryTypes())) {
             join.append(" LEFT JOIN category c on c.id = e.category_id")
                     .append(" LEFT JOIN category_type ct on ct.id = c.category_type_id");
         }
-        if (!CollectionUtils.isEmpty(categoryNames)
+        if (!CollectionUtils.isEmpty(dto.getCategoryNames())
                 && join.isEmpty()) {
             join.append(" LEFT JOIN category c on c.id = e.category_id");
         }
     }
 
     private void where(StringBuilder where,
-                       String budgedAccountId,
-                       Double amountMin,
-                       Double amountMax,
-                       Date startDate,
-                       Date endDate,
-                       List<String> categoryNames,
-                       List<String> categoryTypes) {
+                       ExpenseQueryRepoDto dto) {
         where.append(" WHERE")
-                .append(" ba.id = '").append(budgedAccountId).append("'");
+                .append(" ba.id = '").append(dto.getBudgedAccountId()).append("'");
 
-        if (amountMin != null) {
+        if (dto.getAmountMin() != null) {
             where.append(" AND e.amount >= :amountMin");
         }
-        if (amountMax != null) {
+        if (dto.getAmountMax() != null) {
             where.append(" AND e.amount <= :amountMax");
         }
-        if (startDate != null) {
+        if (dto.getStartDate() != null) {
             where.append(" AND e.dateCreated >= startDate");
         }
-        if (endDate != null) {
+        if (dto.getEndDate() != null) {
             where.append(" AND e.dateCreated <= endDate");
         }
-        if (!CollectionUtils.isEmpty(categoryNames)) {
+        if (!CollectionUtils.isEmpty(dto.getCategoryNames())) {
             where.append(" AND c.name IN :categoryName");
         }
-        if (!CollectionUtils.isEmpty(categoryTypes)) {
+        if (!CollectionUtils.isEmpty(dto.getCategoryTypes())) {
             where.append(" AND ct.name IN :categoryType");
         }
     }
 
     private void params(Query q,
-                        Double amountMin,
-                        Double amountMax,
-                        Date startDate,
-                        Date endDate,
-                        List<String> categoryNames,
-                        List<String> categoryTypes) {
+                        ExpenseQueryRepoDto dto) {
 
-        if (amountMin != null) {
-            q.setParameter("amountMin", amountMin);
+        if (dto.getAmountMin() != null) {
+            q.setParameter("amountMin", dto.getAmountMin());
         }
-        if (amountMax != null) {
-            q.setParameter("amountMax", amountMax);
+        if (dto.getAmountMax() != null) {
+            q.setParameter("amountMax", dto.getAmountMax());
         }
-        if (startDate != null) {
-            q.setParameter("startDate", startDate);
+        if (dto.getStartDate() != null) {
+            q.setParameter("startDate", dto.getStartDate());
         }
-        if (endDate != null) {
-            q.setParameter("endDate", endDate);
+        if (dto.getEndDate() != null) {
+            q.setParameter("endDate", dto.getEndDate());
         }
-        if (!CollectionUtils.isEmpty(categoryNames)) {
-            q.setParameter("categoryName", categoryNames);
+        if (!CollectionUtils.isEmpty(dto.getCategoryNames())) {
+            q.setParameter("categoryName", dto.getCategoryNames());
         }
-        if (!CollectionUtils.isEmpty(categoryTypes)) {
-            q.setParameter("categoryType", categoryTypes);
+        if (!CollectionUtils.isEmpty(dto.getCategoryTypes())) {
+            q.setParameter("categoryType", dto.getCategoryTypes());
         }
     }
 }

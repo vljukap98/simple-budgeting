@@ -11,18 +11,16 @@ import ljakovic.simplebudgeting.income.dto.IncomeSearchDto;
 import ljakovic.simplebudgeting.income.mapper.IncomeMapper;
 import ljakovic.simplebudgeting.income.model.Income;
 import ljakovic.simplebudgeting.income.repo.IncomeRepo;
+import ljakovic.simplebudgeting.income.repo.impl.dto.IncomeQueryRepoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class IncomeService {
@@ -37,28 +35,21 @@ public class IncomeService {
     private IncomeMapper mapper;
 
     public List<IncomeDto> searchByBudgetAccountIdPageable(Pageable pageable, Integer budgetAccountId, IncomeSearchDto searchDto) {
-        final BudgetAccount account = accountRepo.findById(budgetAccountId)
-                .orElseThrow(() -> new EntityNotFoundException("Budget account not found"));
 
-        String accountId = budgetAccountId.toString();
-        Double amountMin = searchDto.getAmountMin();
-        Double amountMax = searchDto.getAmountMax();
-        Date startDate = searchDto.getStartDate();
-        Date endDate = searchDto.getEndDate();
+        IncomeQueryRepoDto dto = IncomeQueryRepoDto.builder()
+                .budgedAccountId(budgetAccountId.toString())
+                .amountMin(searchDto.getAmountMin())
+                .amountMax(searchDto.getAmountMax())
+                .startDate(searchDto.getStartDate())
+                .endDate(searchDto.getEndDate())
+                .build();
 
-        final List<Integer> incomeIds = incomeRepo.searchIncomeByAccount(
-                accountId,
-                amountMin,
-                amountMax,
-                startDate,
-                endDate,
-                pageable
-        );
+        final List<Integer> incomeIds = incomeRepo.searchIncomeByAccount(dto, pageable);
 
         return incomeRepo.findAllById(incomeIds)
                 .stream()
                 .map(mapper::mapTo)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public IncomeDto createIncome(IncomeDto dto) {
@@ -118,10 +109,5 @@ public class IncomeService {
         }
 
         return resDto;
-    }
-
-    private Date convert(String date) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return dateFormat.parse(date);
     }
 }

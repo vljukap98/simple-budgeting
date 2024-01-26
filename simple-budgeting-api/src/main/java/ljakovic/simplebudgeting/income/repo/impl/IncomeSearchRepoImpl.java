@@ -3,11 +3,11 @@ package ljakovic.simplebudgeting.income.repo.impl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import ljakovic.simplebudgeting.income.repo.IncomeSearchRepo;
+import ljakovic.simplebudgeting.income.repo.impl.dto.IncomeQueryRepoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -18,11 +18,7 @@ public class IncomeSearchRepoImpl implements IncomeSearchRepo {
 
     @Override
     public List<Integer> searchIncomeByAccount(
-            String budgedAccountId,
-            Double amountMin,
-            Double amountMax,
-            Date startDate,
-            Date endDate,
+            IncomeQueryRepoDto dto,
             Pageable pageable) {
         final StringBuilder query = new StringBuilder();
 
@@ -30,59 +26,50 @@ public class IncomeSearchRepoImpl implements IncomeSearchRepo {
                 .append(" INNER JOIN budget_account ba on ba.id = e.account_id");
 
         final StringBuilder where = new StringBuilder();
-        where(where, budgedAccountId, amountMin, amountMax, startDate, endDate);
+        where(where, dto);
         query.append(where);
 
         Query q = em.createNativeQuery(query.toString(), Integer.class);
-        params(q, amountMin, amountMax, startDate, endDate);
+        params(q, dto);
         q.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
         q.setMaxResults(pageable.getPageSize());
 
         return q.getResultList();
     }
 
-    private void where(
-            StringBuilder where,
-            String budgedAccountId,
-            Double amountMin,
-            Double amountMax,
-            Date startDate,
-            Date endDate) {
+    private void where(StringBuilder where, IncomeQueryRepoDto dto) {
         where.append(" WHERE")
-                .append(" ba.id = '").append(budgedAccountId).append("'");
+                .append(" ba.id = '").append(dto.getBudgedAccountId()).append("'");
 
-        if (amountMin != null) {
+        if (dto.getAmountMin() != null) {
             where.append(" AND e.amount >= :amountMin");
         }
-        if (amountMax != null) {
+        if (dto.getAmountMax() != null) {
             where.append(" AND e.amount <= :amountMax");
         }
-        if (startDate != null) {
+        if (dto.getStartDate() != null) {
             where.append(" AND e.dateCreated >= startDate");
         }
-        if (endDate != null) {
+        if (dto.getEndDate() != null) {
             where.append(" AND e.dateCreated <= endDate");
         }
     }
 
     private void params(
             Query q,
-            Double amountMin,
-            Double amountMax,
-            Date startDate,
-            Date endDate) {
+            IncomeQueryRepoDto dto) {
 
-        if (amountMin != null) {
-            q.setParameter("amountMin", amountMin);
+        if (dto.getAmountMin() != null) {
+            q.setParameter("amountMin", dto.getAmountMin());
         }
-        if (amountMax != null) {
-            q.setParameter("amountMax", amountMax);
+        if (dto.getAmountMax() != null) {
+            q.setParameter("amountMax", dto.getAmountMax());
         }
-        if (startDate != null) {
-            q.setParameter("startDate", startDate);
+        if (dto.getStartDate() != null) {
+            q.setParameter("startDate", dto.getStartDate());
         }
-        if (endDate != null) {
-            q.setParameter("endDate", endDate);
+        if (dto.getEndDate() != null) {
+            q.setParameter("endDate", dto.getEndDate());
         }
     }
 }

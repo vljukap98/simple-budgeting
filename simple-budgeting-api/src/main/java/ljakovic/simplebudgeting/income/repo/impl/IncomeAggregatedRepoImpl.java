@@ -5,6 +5,8 @@ import jakarta.persistence.Query;
 import jakarta.persistence.Tuple;
 import ljakovic.simplebudgeting.aggregation.dto.AggregationTypeEnum;
 import ljakovic.simplebudgeting.income.repo.IncomeAggregatedRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Repository
 public class IncomeAggregatedRepoImpl implements IncomeAggregatedRepo {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IncomeAggregatedRepoImpl.class);
 
     @Autowired
     private EntityManager em;
@@ -43,7 +47,7 @@ public class IncomeAggregatedRepoImpl implements IncomeAggregatedRepo {
             query.append("GROUP BY year");
         }
 
-        System.out.println(query);
+        LOGGER.info("{}", query);
 
         Query q = em.createNativeQuery(query.toString(), Tuple.class);
 
