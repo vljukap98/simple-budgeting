@@ -25,7 +25,8 @@ public class AggregationEndpoint {
             @RequestBody AggregationDto reqDto,
             @PathVariable Integer id
             ) {
-        LOGGER.info("Request POST body: {}", reqDto);
+        LOGGER.info("POST request /v1/aggregation/money-spent/budget-account/{}", id);
+        LOGGER.info("POST request body: {}", reqDto);
         return ResponseEntity.ok(service.aggregateMoneySpent(id, reqDto)) ;
     }
 
@@ -34,7 +35,8 @@ public class AggregationEndpoint {
             @RequestBody AggregationDto reqDto,
             @PathVariable Integer id
     ) {
-        LOGGER.info("Request POST body: {}", reqDto);
+        LOGGER.info("POST request /v1/aggregation/money-earned/budget-account/{}", id);
+        LOGGER.info("POST request body: {}", reqDto);
         return ResponseEntity.ok(service.aggregateMoneyEarned(id, reqDto)) ;
     }
 
